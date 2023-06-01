@@ -9,7 +9,7 @@ score.transcript <- function(system.1.2.dta=NULL) {
 
   score<-''
   chemin<-''
-print('on est au debut')
+
 if (is.null(system.1.2.dta))
 {
 print("No score for this Stock without data")
@@ -48,12 +48,13 @@ else
       if (min(system.1.2.dta$f_fmsy)>=1.5 && min(system.1.2.dta$f_fmsy)<2) {score<-'D'}
       if (min(system.1.2.dta$f_fmsy)>=2)  {score<-'E'}
     }
-
+    system.1.2.dta$score<-score
+    system.1.2.dta$road<-chemin
+    return(system.1.2.dta)
   }
-  system.1.2.dta$score<-score
-  system.1.2.dta$road<-chemin
-  return(system.1.2.dta)
-}
+
+
+
 
     if (system.1.2.dta$method[1]=='system1')
   {
@@ -80,8 +81,7 @@ else
   system.1.2.dta$score<-score
   system.1.2.dta$road<-chemin
   return(system.1.2.dta)
-  } else{print("on est ou")}
+  }
+}
 
-
-print('on est a la fin')
 }

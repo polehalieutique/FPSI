@@ -7,7 +7,7 @@
 #'
 system.2 <- function(sci_name=NULL,area=NULL,stockdef=NULL,limits=NULL,fishdata=NULL) {
 
-an_6<-2018 # We take into account time series from 2023 to 2017 (6 year)
+an_6<-2017 # We take into account time series from 2023 to 2017 (6 year)
 
 if (is.null(stockdef) && is.null(limits) && is.null(fishdata))
 {
@@ -32,7 +32,7 @@ if (is.null(stockdef) && is.null(limits) && is.null(fishdata))
               road.3=mean.b_bmsy>=0.8 && is.na(mean.f_fmsy),
               road.4=is.na(mean.b_bmsy) && !is.na(mean.f_fmsy) ,nb.eval=n(),eval.year=mean(evaluationyear,na.rm=TRUE),
               f_fmsy=paste(f_fmsy,collapse='/'),b_bmsy=paste(b_bmsy,collapse='/'))) %>%
-    mutate(roadall=as.numeric(coalesce(road.1,0))+as.numeric(coalesce(road.2,0))+as.numeric(coalesce(road.3,0))+as.numeric(coalesce(road.4,0))) %>%
+    mutate(roadall=as.numeric(coalesce(road.1,0))+as.numeric(coalesce(road.2,0))+as.numeric(coalesce(road.3,0))+as.numeric(coalesce(road.4,0)))  %>%
     filter(roadall!=0)  ->system2.dta
 
 

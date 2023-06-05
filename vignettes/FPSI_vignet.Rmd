@@ -1,0 +1,370 @@
+---
+title: "Vignette"
+author: "Jerome Guitton"
+date: '2023-05-25'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(stocksmart)
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+library(tidyr)
+library(icesSD)
+library(icesSAG)
+library(FPSI)
+library(sf)
+library(knitr)
+library(kableExtra)
+#test
+
+
+
+```
+
+# ICES, NOAA database with specific R packages
+
+## NOAA stocksmart packages
+
+We use stocksmart package to access stock information they provide and we format them in our Common Ices format using limits format for references points and fishdata for time series. 
+limits.noaa and fishdata.noaa functions provide NOAA data formated as ICES one
+```{r NOAA_formated_data}
+limits.noaa.dta<-limits.noaa()
+
+stockdef.noaa.dta<-stockdef.noaa()
+
+g1<-limits.noaa.dta %>% filter(fishstock=='Gag - Southern Atlantic Coast') %>% 
+  ggplot()+geom_point((aes(x=evaluationyear,y=fmsy)))+ggtitle("FMSY for GAG SA coast")
+g2<-limits.noaa.dta %>% filter(fishstock=='Gag - Southern Atlantic Coast') %>% 
+  ggplot()+geom_point((aes(x=evaluationyear,y=msybtrigger)))+ggtitle("MSYBtrigger for GAG SA coast")
+ggarrange(g1,g2)
+
+
+fishdata.noaa.dta<-fishdata.noaa()
+
+
+fishdata.noaa.dta %>% group_by(fishstock) %>% summarize(evaluationyear=max(evaluationyear))->last.eval
+g1<-fishdata %>% filter(fishstock=='Gag - Southern Atlantic Coast') %>%
+  inner_join(last.eval) %>% 
+  ggplot()+geom_line((aes(x=year,y=landings)))+ggtitle("Landing provided by last available assessment /GAG SA coast")
+g2<-fishdata.noaa.dta %>% filter(fishstock=='Gag - Southern Atlantic Coast') %>%
+  inner_join(last.eval) %>% 
+  ggplot()+geom_line((aes(x=year,y=meanf)))+ggtitle("Fish mort provided by last available assessment /GAG SA coast")
+g3<-fishdata.noaa.dta %>% filter(fishstock=='Gag - Southern Atlantic Coast') %>%
+  inner_join(last.eval) %>% 
+  ggplot()+geom_line((aes(x=year,y=recruitment)))+ggtitle("Recruitment provided by last available assessment /GAG SA coast")
+g4<-fishdata.noaa.dta %>% filter(fishstock=='Gag - Southern Atlantic Coast') %>%
+  inner_join(last.eval) %>% 
+  ggplot()+geom_line((aes(x=year,y=ssb)))+ggtitle("SSB provided by last available assessment /GAG SA coast")
+
+ggarrange(g1,g2,g3,g4)
+
+fishdata.noaa.dta %>% group_by(fishstock,evaluationyear) %>% summarize(year=max(year))->last.ts.year
+
+fishdata.noaa.dta %>% inner_join(last.ts.year) %>% inner_join(limits) %>% 
+  mutate(f_fmsy=meanf/fmsy,b_bmsy=tbiomass/msybtrigger) ->system1
+  
+g1<- system1 %>% filter(fishstock=='Gag - Southern Atlantic Coast') %>% 
+  ggplot()+geom_point(aes(x=evaluationyear,y=f_fmsy))
+g2<-system1 %>% filter(fishstock=='Gag - Southern Atlantic Coast') %>% 
+  ggplot()+geom_point(aes(x=evaluationyear,y=b_bmsy))
+
+ggarrange(g1,g2)
+
+
+#usethis::use_data(limits.noaa.dta)
+#usethis::use_data(stockdef.noaa.dta)
+#usethis::use_data(fishdata.noaa.dta)
+
+
+```
+
+## ICES R packages
+
+We use icesSD and icesSAG to get similar values from ICES (limits.ices and fishdata.ices provide our common formated data)
+
+```{r ICES_formated_data}
+
+#fishdata.ices.dta<-fishdata.ices(update=TRUE)
+#limits.ices.dta<-limits.ices(update=TRUE)
+fishdata.ices.dta<-fishdata.ices()
+limits.ices.dta<-limits.ices(update=TRUE)
+
+#usethis::use_data(limits.ices.dta)
+#usethis::use_data(fishdata.ices.dta)
+
+
+
+
+g1<-limits.ices.dta %>% filter(fishstock=='ank.27.8c9a') %>% 
+  ggplot()+geom_point((aes(x=evaluationyear,y=fmsy)))+ggtitle("FMSY for ank.27.8c9a")
+g2<-limits.ices.dta %>% filter(fishstock=='ank.27.8c9a') %>% 
+  ggplot()+geom_point((aes(x=evaluationyear,y=msybtrigger)))+ggtitle("ank.27.8c9a")
+ggarrange(g1,g2)
+
+
+fishdata.ices.dta %>% group_by(fishstock) %>% summarize(evaluationyear=max(evaluationyear))->last.eval
+g1<-fishdata.ices.dta %>% filter(fishstock=='ank.27.8c9a') %>%
+  inner_join(last.eval) %>% 
+  ggplot()+geom_line((aes(x=year,y=landings)))+ggtitle("Landing provided by last available assessment")
+g2<-fishdata.ices.dta %>% filter(fishstock=='ank.27.8c9a') %>%
+  inner_join(last.eval) %>% 
+  ggplot()+geom_line((aes(x=year,y=meanf)))+ggtitle("Fish mort provided by last available assessment ")
+g3<-fishdata.ices.dta %>% filter(fishstock=='ank.27.8c9a') %>%
+  inner_join(last.eval) %>% 
+  ggplot()+geom_line((aes(x=year,y=recruitment)))+ggtitle("Recruitment provided by last available assessment ")
+g4<-fishdata.ices.dta %>% filter(fishstock=='ank.27.8c9a') %>%
+  inner_join(last.eval) %>% 
+  ggplot()+geom_line((aes(x=year,y=ssb)))+ggtitle("SSB provided by last available assessment /GAG SA coast")
+
+ggarrange(g1,g2,g3,g4)
+
+
+
+
+```
+
+## Other Informations
+
+Command to update information, need 4 parameters to connect to the online DB 
+```{r eval=FALSE}
+
+
+#limits.other.dta<-limits.other(update=TRUE,user=USERPASS,password=PASS,server=Monserveur,db=mabase)
+#fishdata.other.dta<-fishdata.other(update=TRUE,user=USERPASS,password=PASS,server=Monserveur,db=mabase)
+#stockdef.other.dta<-stockdef.other(update=TRUE,user=USERPASS,password=PASS,server=Monserveur,db=mabase)
+#usethis::use_data(stockdef.other.dta,overwrite=TRUE)  
+
+limits.other.dta<-limits.other()
+fishdata.other.dta<-fishdata.other()
+stockdef.other.dta<-stockdef.other()
+
+stock.int<-'swo-io'
+
+fishdata %>% group_by(fishstock) %>% summarize(evaluationyear=max(evaluationyear))->last.eval
+
+  g1<-fishdata %>% filter(fishstock==stock.int) %>%
+  inner_join(last.eval) %>% 
+  ggplot()+geom_line((aes(x=year,y=landings)))+ggtitle("Landing provided by last available assessment")
+g2<-fishdata %>% filter(fishstock==stock.int) %>%
+  inner_join(last.eval) %>% 
+  ggplot()+geom_line((aes(x=year,y=meanf)))+ggtitle("Fish mort provided by last available assessment /GAG SA coast")
+g3<-fishdata %>% filter(fishstock==stock.int) %>%
+  inner_join(last.eval) %>% 
+  ggplot()+geom_line((aes(x=year,y=recruitment)))+ggtitle("Recruitment provided by last available assessment /GAG SA coast")
+g4<-fishdata %>% filter(fishstock==stock.int) %>%
+  inner_join(last.eval) %>% 
+  ggplot()+geom_line((aes(x=year,y=ssb)))+ggtitle("SSB provided by last available assessment ")
+
+ggarrange(g1,g2,g3,g4)
+
+fishdata %>% group_by(fishstock,evaluationyear) %>% summarize(year=max(year))->last.ts.year
+
+fishdata %>% inner_join(last.ts.year) %>% inner_join(limits) %>% 
+  mutate(f_fmsy=meanf/fmsy,b_bmsy=tbiomass/msybtrigger) ->system2
+  
+g1<- system2 %>% filter(fishstock==stock.int) %>% 
+  ggplot()+geom_point(aes(x=evaluationyear,y=f_fmsy))
+g2<-system2 %>% filter(fishstock==stock.int) %>% 
+  ggplot()+geom_point(aes(x=evaluationyear,y=b_bmsy))
+
+ggarrange(g1,g2)
+
+```
+
+
+# Mixing all data
+
+## System 2
+
+There are some discrepancies between the report page 26 and foloowing. In page 27 the indicator is calculted with the mean of Fcurrent/Fmsy over the stocks assessment that occurs since 6 years? But in the case study, it seems that the calculation is made only using the last available assessment and it's an average of Fishing mortalities overs the lat 6 years of the time serie over Fmsy (similar to the calculation made for the balance capacity).
+
+After meeting 5/06/2023 the rules is :
+1- We use the last available assessment . 
+2- We use Average of F overs at least 6 years / Fmsy
+
+The second questioin is when the area is higher than stocks one, we catch several fishstock -> do we consider the worst value of all stocks in the same area (see previous report) ?
+
+```{r}
+
+pre.score.2<-system.2(sci_name='SOLEA SOLEA',area='27')
+tout<-system.2()
+#if I want to get all the system2 species, leave the values as NULL
+
+ggplot(pre.score.2)+geom_sf(aes(fill=fishstock))
+
+pre.score.2 %>% st_drop_geometry() %>% kbl() %>%
+  kable_styling()
+
+
+
+```
+For Solea, we have to check why for one fishstock we hhave 9 assessment over 6 years (4 for 2019). Maybe we have to filter on type of outputs in teh ICES webservice (Type of publication / Published / Update or ...)
+
+
+# System 1
+
+## IUCN data 
+
+Les données IUCN sont collectées à partir de 3 fichiers Marines Fishes collectés ici :https://www.iucnredlist.org/resources/spatial-data-download
+Pour pouvoir avoir une taille raisonable j'ai simplifié les polygone :
+
+Sous postgres 
+
+create table geo.iucn_dta_simpl as  
+select id_no,upper(sci_name) as scientific_name,yrcompiled,freshwater,category,st_simplify(geom,0.1) as geom from geo.iucn_dta 
+
+So i merge the 3 shapefile, then i import the merged one to a postgis database and then i simplify the geometry. At the end i download the shape to R and save the iucn.dta. You can now find it using data(iucn.dta) command
+
+```{r}
+
+#iucn.dta<-st_read(stock,query="select * from geo.iucn_dta_simpl")
+#usethis::use_data(iucn.dta)  
+
+
+#Number of species / lines by catégory
+data(iucn.dta)
+head(iucn.dta)
+iucn.dta %>% st_drop_geometry() %>% group_by(category) %>% summarize(total=n())
+
+# a map for each category
+ggplot(iucn.dta)+geom_sf()+facet_grid(~category)
+
+
+```
+
+## Sensitive species
+
+La liste des espèces sensible est là enfin 
+```{r}
+#curl::curl_download("https://data.dtu.dk/ndownloader/files/37373044",destfile='sensitive.csv')
+
+#sensitive.dta<-read.csv2("sensitive.csv")
+#Attention blank at the end of scientfic name
+#library(stringr)
+#sensitive.dta<-sensitive.dta %>% mutate(scientific_name=str_trim(toupper(Species)))
+
+#usethis::use_data(sensitive.dta,overwrite=TRUE)  
+
+data(sensitive.dta)
+
+head(sensitive.dta)
+
+sensitive.dta %>% mutate(Rindorf=trunc(as.numeric(Rindorf_precautionary_F)/10)*10) %>% 
+  group_by(Rindorf) %>% summarise(n=n()) %>% 
+  ggplot()+geom_bar(aes(x=Rindorf,y=n),stat='identity')
+
+
+```
+
+## Mixing system 1 and 2
+
+Now we have stock assessment information from limits and fishdata, iucn.dta and sensitive.dta. 
+
+```{r}
+#Number of stocks in system 2 database
+dim(system2)
+
+#Number of sensitive species
+dim(sensitive.dta)
+
+#Number of species/area for IUCN
+dim(iucn.dta)
+
+
+```
+system2.iucn only take stock without system 1 and check if the species and area (spatial intersection) could help us to access to system1..
+We can check it on RAJA CLAVATA stocks. 
+The link between stock and IUCN area are the intersction between the two polygons
+
+```{r}
+data(iucn.dta)
+
+iucn.raja<-iucn.dta %>% filter(scientific_name=='RAJA CLAVATA')
+system2.iucn %>% filter(scientific_name.x=='RAJA CLAVATA') %>% 
+  ggplot()+geom_sf(aes(fill=fishstock.x))+
+  geom_sf(data=iucn.raja,alpha=0.5)
+
+system.2.road1.2.3.4<-system.2(sci_name='SQUATINA SQUATINA',area='27.7.E')
+
+if (dim(system.2.road1.2.3.4)[1]==0)
+
+system.2.road1.2.3.4<-system.2(sci_name='THUNNUS ALALUNGA',area='')
+
+system.1.road.5.6<-system.1(sci_name='SQUATINA SQUATINA',area='27.7.E')
+
+system.1.2.dta<-system.2(sci_name='THUNNUS ALALUNGA',area='51.')
+
+system.1.2.dta<-system.1.2(sci_name='THUNNUS ALALUNGA',area='51.')
+
+score.transcript(system.1.2.dta %>% st_drop_geometry())
+
+system.1.2.dta<-system.1.2(sci_name='SQUATINA SQUATINA',area='37.')
+
+
+system.1.2.dta<-system.2(sci_name='LOPHIUS PISCATORIUS',area='27.')
+
+
+score.transcript(system.1.2.dta)
+
+
+system.1.2.dta %>% st_drop_geometry() %>% kbl() %>%
+  kable_styling()
+
+stockdef.other.dta %>% distinct(scientific_name) %>% arrange(scientific_name)->taxon
+
+system.1.2.dta %>% st_drop_geometry() %>% kbl() %>%
+  kable_styling()
+
+
+limits %>% filter(fishstock=='ank.27.78abd')
+fishdata %>% filter(fishstock=='ank.27.78abd')
+```
+
+After Stock cithout system2 -> link with IUCN 56 other stock could rely to a iucn category and finaly, with sensitive, 163 stocks could rely to sensitive species
+```{r}
+iucn.dta %>% right_join (reste.system2 %>% st_drop_geometry()) %>% filter(is.na(category))->system2.iucn.tmp.reste
+
+system2.iucn.tmp.reste %>% left_join(sensitive.dta) %>% filter(!is.na(Rindorf_precautionary_F))->road.6
+
+system2.iucn.tmp.reste %>% left_join(sensitive.dta) %>% filter(is.na(Rindorf_precautionary_F))->system2.iucn.sensitive.reste
+
+```
+
+
+The end here ?
+
+
+```{r}
+nstocks<-length(system2$fishstock)
+
+nstocks_iucn<-length((system2 %>% st_drop_geometry( )%>% inner_join(iucn.dta))$fishstock)
+print(paste("Joining stock from system2 to iucn species we decrease the number of stocks from ",nstocks," to ",nstocks_iucn,sep=''))
+
+#L'ensemble des espèces avec présence dans les stocks et absence dans iucn
+system2 %>% st_drop_geometry( )%>% left_join(iucn.dta) %>% dplyr::select(fishstock,scientific_name,category) %>% filter(is.na(category))
+
+# That means by example that Acadian redfish - Gulf of Maine / Georges Bank	SEBASTES FASCIATUS is available in Stock Ass database but not in IUCN one
+
+nstocks_sensitive<-length((system2 %>% inner_join(sensitive.dta))$fishstock) 
+print(paste("Joining stock from system2 to sensitive species we decrease the number of stocks from ",nstocks," to ",nstocks_sensitive,sep=''))
+
+#Pour l'exemple
+system2 %>% st_drop_geometry()%>% left_join(sensitive.dta) %>% dplyr::select(fishstock,scientific_name,Species) %>% filter(is.na(Species))
+
+# That means by exemple that Acadian redfish - Gulf of Maine / Georges Bank	SEBASTES FASCIATUS is available in Stock Ass database but not in sensitive one
+
+#The same between sensitive an iucn
+sensitive.dta %>% left_join(iucn.dta) %>% dplyr::select(Species,scientific_name,category) %>% filter(is.na(category))->reste.system2.et.1
+# That means by exemple that ZEUS FABER is a sensitive specie but not included in IUCN list
+
+reste.system2.et.1 %>% kbl() %>%
+  kable_styling()
+
+iucn.dta %>% st_drop_geometry() %>% arrange(scientific_name)->test
+
+
+```
+

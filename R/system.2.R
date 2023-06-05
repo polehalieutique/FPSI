@@ -26,7 +26,7 @@ if (is.null(stockdef) && is.null(limits) && is.null(fishdata))
   stockdef %>% right_join(
     fishdata %>% filter(year>=an_6) %>% inner_join(last.Eval.year) %>%
       inner_join (limits) %>%
-      mutate(f_fmsy=meanf/fmsy,b_bmsy=tbiomass/msybtrigger) %>%
+      mutate(f_fmsy=meanf/fmsy,b_bmsy=ssb/msybtrigger) %>%
       group_by(fishstock) %>% summarize(mean.f_fmsy=mean(f_fmsy,na.rm=TRUE),mean.b_bmsy=mean(b_bmsy,na.rm=TRUE),road.1=mean.b_bmsy<0.8,
               road.2=mean.b_bmsy>=0.8 && !is.na(mean.f_fmsy),
               road.3=mean.b_bmsy>=0.8 && is.na(mean.f_fmsy),

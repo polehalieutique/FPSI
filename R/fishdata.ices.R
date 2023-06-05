@@ -11,7 +11,7 @@ fishdata.ices <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE,from
   {
   if (is.null(to)) {to=as.numeric(format(Sys.time(), "%Y"))}
     assessments <- getListStocks(seq(from,to))
-
+    assessments %>%  dplyr::filter(Purpose=="Advice")->assessments
     fishdata.tmp  <- do.call("rbind",getSummaryTable(assessments$AssessmentKey))
       fishdata.tmp %>% dplyr::mutate(evaluationyear=AssessmentYear,workinggroup='ICES',year=Year,ssb=as.numeric(SSB),meanf=as.numeric(F),low_f=as.numeric(low_F),high_f=as.numeric(high_F),tbiomass=NA,yieldssb=NA,sop=NA) %>%
         dplyr::select(evaluationyear,workinggroup,fishstock,year,recruitment,tbiomass,ssb,landings,yieldssb,meanf,sop,discards,low_f,high_f)->fishdata.ices.dta

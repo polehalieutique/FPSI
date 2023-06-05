@@ -12,6 +12,8 @@ limits.ices <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE,from=2
     if (is.null(to)) {to=as.numeric(format(Sys.time(), "%Y"))}
     assessments <- getListStocks(seq(from,to))
 
+    assessments %>%  dplyr::filter(Purpose=="Advice")->assessments
+
 
 
     masliste<-lapply(getFishStockReferencePoints(assessments$AssessmentKey), function(x) x%>% select(matches("AssessmentKey|StockKeyLabel|StockDatabaseID|StockKey|AssessmentYear|FLim|Fpa|Bpa|Blim|FMSY|MSYBtrigger")))

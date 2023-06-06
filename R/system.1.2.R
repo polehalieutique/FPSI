@@ -22,7 +22,8 @@ if (dim(system.2.road1.2.3.4)[1]==0)
 }
 else
 {
-  return(system.2.road1.2.3.4 %>% mutate(method='system2'))
+  tmp<-system.2.road1.2.3.4 %>% mutate(method='system2')
+  return(tmp)
 }
 
 

@@ -4,7 +4,17 @@
 \alias{system.1.2}
 \title{Get limits values for  stocks provided by ICES stocksmart packages}
 \usage{
-system.1.2(sci_name = NULL, area = NULL, longitude = NULL, latitude = NULL)
+system.1.2(
+  sci_name = NULL,
+  area = NULL,
+  stockdef = NULL,
+  limits = NULL,
+  fishdata = NULL,
+  iucn.dta = NULL,
+  sensitive.dta = NULL,
+  area.dta = NULL,
+  iucn_to_stock_area = NULL
+)
 }
 \arguments{
 \item{area}{catches area mentionned for the product}

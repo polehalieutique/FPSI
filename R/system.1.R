@@ -5,12 +5,12 @@
 #' pre.score.2<-system.2(sci_name='SQUATINA SQUATINA',area='27.')
 #' @export
 #'
-system.1 <- function(sci_name=NULL,area=NULL,longitude=NULL,latitude=NULL) {
+system.1 <- function(sci_name=NULL,area=NULL,iucn.dta=NULL,sensitive.dta=NULL,area.dta=NULL,iucn_to_stock_area=NULL,longitude=NULL,latitude=NULL) {
 
-data(iucn.dta)
-data(sensitive.dta)
-data(area.dta)
-data(iucn_to_stock_area)
+if (!is.null(iucn.dta)) {data(iucn.dta)}
+if (!is.null(sensitive.dta)) {data(sensitive.dta)}
+if (!is.null(area.dta)) {data(area.dta)}
+if (!is.null(iucn_to_stock_area)) {data(iucn_to_stock_area)}
 
 sf::sf_use_s2(FALSE)
 

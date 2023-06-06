@@ -11,11 +11,12 @@ an_6<-2017 # We take into account time series from 2023 to 2017 (6 year)
 
 if (is.null(stockdef) && is.null(limits) && is.null(fishdata))
 {
-    stockdef<-stockdef.other()
+  stockdef<-stockdef.other()
 
-  limits<-rbind(limits.noaa(),limits.other(),limits.ices()) #manque limit.ices()
+  limits<-rbind(limits.noaa(),limits.other(),limits.ices())
 
-  fishdata<-rbind(fishdata.noaa(),fishdata.other(),fishdata.ices()) #manque fishdata.ices()
+  fishdata<-rbind(fishdata.noaa(),fishdata.other(),fishdata.ices())
+}
 
   sf::sf_use_s2(FALSE)
 #To obtain last available Evaluationyear by stock
@@ -47,6 +48,6 @@ g1<-ggplot(results)+geom_sf(aes(fill=fishstock))
 
 
 return(results)
-}
+
 
 }

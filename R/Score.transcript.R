@@ -60,6 +60,15 @@ else
   {
       print('System1 detected')
       chemin<-'road.6'
+      if (is.na(system.1.2.dta$category)) {
+
+        if (system.1.2.dta$Rindorf_precautionary_F>3) {score<-'C'} #Low sensitivity
+        if (system.1.2.dta$Rindorf_precautionary_F>0.41 & system.1.2.dta$Rindorf_precautionary_F<=3) {score<-'D'} #Medium
+        if (system.1.2.dta$Rindorf_precautionary_F<=0.41) {score<-'E'} #High sensitivity
+        chemin<-'road.8'
+      }
+      else
+      {
       if (system.1.2.dta$category=='NT') {score<-'D'}
       if (system.1.2.dta$category %in% c('VU','CR','EN')) {
         print("On devrait passer par ici ")
@@ -70,14 +79,7 @@ else
         if (system.1.2.dta$Rindorf_precautionary_F<=3) {score<-'C'} #Medium and High sensitivity
         chemin<-'road.7'
       }
-  if (is.na(system.1.2.dta$category)) {
-
-        if (system.1.2.dta$Rindorf_precautionary_F>3) {score<-'C'} #Low sensitivity
-        if (system.1.2.dta$Rindorf_precautionary_F>0.41 & system.1.2.dta$Rindorf_precautionary_F<=3) {score<-'D'} #Medium
-        if (system.1.2.dta$Rindorf_precautionary_F<=0.41) {score<-'E'} #High sensitivity
-    chemin<-'road.8'
       }
-
   system.1.2.dta$score<-score
   system.1.2.dta$road<-chemin
   return(system.1.2.dta)

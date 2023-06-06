@@ -314,8 +314,11 @@ system.1.2.dta<-system.1.2(sci_name='SQUATINA SQUATINA',area='37.')
 
 system.1.2.dta<-system.2(sci_name='LOPHIUS PISCATORIUS',area='27.')
 
+system.1.2.dta<-system.1.2(sci_name='MERLUCCIUS MERLUCCIUS',area='SA 17')
 
-score.transcript(system.1.2.dta)
+system.1.2.dta<-system.1.2(sci_name='ANARHICHAS LUPUS',area='27.')
+
+score.transcript(system.1.2.dta )
 
 
 system.1.2.dta %>% st_drop_geometry() %>% kbl() %>%

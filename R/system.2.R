@@ -18,13 +18,16 @@ if (is.null(stockdef) && is.null(limits) && is.null(fishdata))
   fishdata<-rbind(fishdata.noaa(),fishdata.other(),fishdata.ices()) #manque fishdata.ices()
 
   sf::sf_use_s2(FALSE)
-
-
-  fishdata %>% filter(year>=an_6) %>% group_by(fishstock) %>%
+#To obtain last available Evaluationyear by stock
+  fishdata %>%  filter(evaluationyear>an_6) %>%  group_by(fishstock) %>%
     summarize(evaluationyear=max(evaluationyear)) ->last.Eval.year
+#To obtain for the last EvaluationYear the last 6 years of the time serie
+fishdata %>%  inner_join(last.Eval.year) %>% group_by(fishstock,evaluationyear) %>%
+    summarize(maxyear=max(year)-6)->last.ts.year
+
 
   stockdef %>% right_join(
-    fishdata %>% filter(year>=an_6) %>% inner_join(last.Eval.year) %>%
+    fishdata %>% inner_join(last.ts.year) %>% filter(year>maxyear) %>%
       inner_join (limits) %>%
       mutate(f_fmsy=meanf/fmsy,b_bmsy=ssb/msybtrigger) %>%
       group_by(fishstock) %>% summarize(mean.f_fmsy=mean(f_fmsy,na.rm=TRUE),mean.b_bmsy=mean(b_bmsy,na.rm=TRUE),road.1=mean.b_bmsy<0.8,

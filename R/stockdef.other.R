@@ -7,7 +7,7 @@
 #'
 stockdef.other <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE,user=NULL,password=NULL,server=NULL,db=NULL) {
 
-  if (update)
+    if (update)
   {
  noaa.include<-paste("('",paste(unique(stockAssessmentSummary$Jurisdiction),collapse="','"),"')",sep='')
 
@@ -16,10 +16,10 @@ stockdef.other <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE,use
     drv <- dbDriver("PostgreSQL")
     stock <- dbConnect(drv, host=server, user=user, password=password, dbname=db)
     stockdef.other.dta<-st_read(stock,query="with part1 as
-(select distinct fishstock,species_code,trim(sub_division_fao) as sub_division_fao,st_buffer(st_simplify(geom,0.5),0) as geom,upper(scientific_name) as scientific_name from def_stock inner join asfis using(species_code)
+(select distinct fishstock,species_code,trim(sub_division_fao) as sub_division_fao,st_buffer(st_simplify(geom,0.1),0) as geom,upper(scientific_name) as scientific_name from def_stock inner join asfis using(species_code)
  inner join limits using(fishstock) left join geo.fao_area_compilation using(sub_division_fao)
  ) select distinct fishstock,species_code,scientific_name,string_agg(sub_division_fao,' / ') as sub_division_fao,st_buffer(st_collect(geom),0)as geom
- from part1 group by fishstock,species_code,scientific_name
+ from part1  group by fishstock,species_code,scientific_name
 ")
     dbDisconnect(stock)
     return(stockdef.other.dta)

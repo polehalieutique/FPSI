@@ -33,7 +33,7 @@ limits.noaa and fishdata.noaa functions provide NOAA data formated as ICES one
 ```{r NOAA_formated_data}
 limits.noaa.dta<-limits.noaa()
 
-stockdef.noaa.dta<-stockdef.noaa()
+#stockdef.noaa.dta<-stockdef.noaa()
 
 g1<-limits.noaa.dta %>% filter(fishstock=='Gag - Southern Atlantic Coast') %>% 
   ggplot()+geom_point((aes(x=evaluationyear,y=fmsy)))+ggtitle("FMSY for GAG SA coast")
@@ -130,8 +130,6 @@ ggarrange(g1,g2,g3,g4)
 
 Command to update information, need 4 parameters to connect to the online DB 
 ```{r eval=FALSE}
-
-
 #limits.other.dta<-limits.other(update=TRUE,user=USERPASS,password=PASS,server=Monserveur,db=mabase)
 #fishdata.other.dta<-fishdata.other(update=TRUE,user=USERPASS,password=PASS,server=Monserveur,db=mabase)
 #stockdef.other.dta<-stockdef.other(update=TRUE,user=USERPASS,password=PASS,server=Monserveur,db=mabase)
@@ -140,6 +138,16 @@ Command to update information, need 4 parameters to connect to the online DB
 limits.other.dta<-limits.other()
 fishdata.other.dta<-fishdata.other()
 stockdef.other.dta<-stockdef.other()
+
+stockdef.other.dta %>% distinct(sub_division_fao,geom) %>% mutate(test=as.numeric(st_area(geom))) %>% 
+  filter(test==0)->atrouver
+
+
+```
+
+
+```{r eval=FALSE}
+
 
 stock.int<-'swo-io'
 

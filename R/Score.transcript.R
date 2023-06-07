@@ -63,10 +63,12 @@ else
       print('System1 detected')
       chemin<-'road.6'
       if (is.na(system.1.2.dta$category)) {
-
+if (!is.na(system.1.2.dta$Rindorf_precautionary_F))
+{
         if (system.1.2.dta$Rindorf_precautionary_F>3) {score<-'C'} #Low sensitivity
         if (system.1.2.dta$Rindorf_precautionary_F>0.41 & system.1.2.dta$Rindorf_precautionary_F<=3) {score<-'D'} #Medium
         if (system.1.2.dta$Rindorf_precautionary_F<=0.41) {score<-'E'} #High sensitivity
+}
         chemin<-'road.8'
       }
       else
@@ -77,8 +79,11 @@ else
         score<-'E'
         }
       if (system.1.2.dta$category=='LC') {
-        if (system.1.2.dta$Rindorf_precautionary_F>3) {score<-'B'} #Low sensitivity
+        if (!is.na(system.1.2.dta$Rindorf_precautionary_F))
+        {
+          if (system.1.2.dta$Rindorf_precautionary_F>3) {score<-'B'} #Low sensitivity
         if (system.1.2.dta$Rindorf_precautionary_F<=3) {score<-'C'} #Medium and High sensitivity
+        }
         chemin<-'road.7'
       }
       }

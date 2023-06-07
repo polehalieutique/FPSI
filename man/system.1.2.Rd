@@ -13,7 +13,8 @@ system.1.2(
   iucn.dta = NULL,
   sensitive.dta = NULL,
   area.dta = NULL,
-  iucn_to_stock_area = NULL
+  iucn_to_stock_area = NULL,
+  iucn.token = NULL
 )
 }
 \arguments{

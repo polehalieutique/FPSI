@@ -19,7 +19,8 @@ Imports:
     ggpubr,
     stocksmart,
     icesSD,
-    icesSAG
+    icesSAG,
+    rredlist
 Suggests: 
     DBI,
     knitr,

@@ -18,6 +18,7 @@ library(FPSI)
 library(sf)
 library(knitr)
 library(kableExtra)
+library(rredlist)
 #test
 
 
@@ -243,6 +244,39 @@ ggplot(iucn.dta)+geom_sf()+facet_grid(~category)
 
 ```
 
+
+### Données IUCN au travers de l'api
+
+For IUCN data we can use web service available through rredlist package 
+The system.1.iucn function is dedicate tto the this second method. To be decide if one is more suitable than the other
+
+We store the token is a file (outside the github repository)
+
+```{r}
+
+token<-readLines('/home/jerome/CSTEP_2023/FPSI/iucn.token')
+system.1.iucnws(sci_name='LOPHIUS PISCATORIUS',area='57.',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,token=token)
+
+
+#With ass is global
+system.1.iucnws(sci_name='LOPHIUS PISCATORIUS',area='27.',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,token=token)
+#With ass is local
+
+system.1.2(sci_name='ANOPLOPOMA FIMBRIA',area='18',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
+
+system.1.2(sci_name='ANOPLOPOMA FIMBRIA',area='18',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
+system.1.2(sci_name='SOLEA SOLEA',area='18',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
+system.1.2(sci_name='SOLEA SOLEA',area='37',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
+
+system.1.2.dta<-system.1.2("SEPIA OFFICINALIS",area='21',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
+
+score.transcript(system.1.2(sci_name='SEPIA OFFICINALIS',area='21',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token))
+
+```
+
+
+
+
 ## Sensitive species
 
 La liste des espèces sensible est là enfin 
@@ -312,7 +346,7 @@ system.1.2.dta<-system.1.2(sci_name='Toto',area='SA 17',stockdef,limits,fishdata
 class(system.1.2.dta)
 score.transcript(system.1.2.dta %>% st_drop_geometry())
 
-system.1.2.dta<-system.1.2(sci_name='ANOPLOPOMA FIMBRIAPP',area='18',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
+system.1.2.dta<-system.1.2(sci_name='ANOPLOPOMA FIMBRIA',area='18',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
 
 
 data<-score.transcript(system.1.2.dta )

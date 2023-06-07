@@ -303,18 +303,20 @@ data(iucn_to_stock_area)
 
 
 system.2(sci_name='LOPHIUS PISCATORIUS',area='27.',stockdef,limits,fishdata)
-system.1(sci_name='LOPHIUS PISCATORIUS',area='27.',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
+system.1(sci_name='LOPHIUS PISCATORIUSlmlm',area='27.',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
 
 system.1.2.dta<-system.1.2(sci_name='THUNNUS ALALUNGA',area='51.',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
 system.1.2.dta<-system.1.2(sci_name='MERLUCCIUS MERLUCCIUS',area='SA 17',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
 
-
-
+system.1.2.dta<-system.1.2(sci_name='Toto',area='SA 17',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
+class(system.1.2.dta)
 score.transcript(system.1.2.dta %>% st_drop_geometry())
 
-system.1.2.dta<-system.1.2(sci_name='ANARHICHAS LUPUS',area='27.',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
+system.1.2.dta<-system.1.2(sci_name='ANOPLOPOMA FIMBRIAPP',area='18',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
 
-score.transcript(system.1.2.dta )
+
+data<-score.transcript(system.1.2.dta )
+if (data$method[1]=='No score for this Stock without data') {print(data$method)}
 
 
 

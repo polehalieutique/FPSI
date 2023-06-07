@@ -35,7 +35,7 @@ sf::sf_use_s2(FALSE)
     system1.road.5 %>% st_drop_geometry() %>% left_join(sensitive.dta) %>% select(-c(Species,X))->results
   }
 
-
+results %>% mutate(fishstock=paste(scientific_name,area,sep='+'))->results
 
   return(results)
 

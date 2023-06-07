@@ -43,8 +43,8 @@ fishdata %>%  inner_join(last.Eval.year) %>% group_by(fishstock,evaluationyear) 
 if (!is.null(sci_name)) {system2.dta %>% filter(scientific_name==toupper(sci_name),grepl(toupper(area), sub_division_fao))->results}
   else(results<-system2.dta )
 
-g1<-ggplot(results)+geom_sf(aes(fill=fishstock))
-  print(g1)
+#g1<-ggplot(results)+geom_sf(aes(fill=fishstock))
+#  print(g1)
 
 
 return(results)

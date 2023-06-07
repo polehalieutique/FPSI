@@ -10,10 +10,12 @@ score.transcript <- function(system.1.2.dta=NULL) {
   score<-''
   chemin<-''
 
-if (is.null(system.1.2.dta))
+if (system.1.2.dta$method[1]=="No answer, nor for system2, nor system1")
 {
-print("No score for this Stock without data")
-#return(FALSE)
+tmp<-data.frame(method="No score for this Stock without data")
+    print(tmp)
+
+return(tmp)
 }
 else
 {

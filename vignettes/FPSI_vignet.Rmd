@@ -272,6 +272,13 @@ system.1.2.dta<-system.1.2("SEPIA OFFICINALIS",area='21',stockdef,limits,fishdat
 
 score.transcript(system.1.2(sci_name='SEPIA OFFICINALIS',area='21',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token))
 
+score.transcript(system.1.2(sci_name='BROSME BROSME',area='27.14.A',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token))
+
+score.transcript(system.1.2(sci_name='BROSME BROSME',area='27.1',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token))
+
+system.2(sci_name='BROSME BROSME',area='27.14.A',stockdef,limits,fishdata)
+
+
 ```
 
 

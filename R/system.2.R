@@ -36,12 +36,11 @@ fishdata %>%  inner_join(last.Eval.year) %>% group_by(fishstock,evaluationyear) 
               road.3=mean.b_bmsy>=0.8 && is.na(mean.f_fmsy),
               road.4=is.na(mean.b_bmsy) && !is.na(mean.f_fmsy) ,nb.eval=n(),eval.year=mean(evaluationyear,na.rm=TRUE),
               f_fmsy=paste(f_fmsy,collapse='/'),b_bmsy=paste(b_bmsy,collapse='/'))) %>%
-    mutate(roadall=as.numeric(coalesce(road.1,0))+as.numeric(coalesce(road.2,0))+as.numeric(coalesce(road.3,0))+as.numeric(coalesce(road.4,0)))  %>%
-    filter(roadall!=0)  ->system2.dta
+    mutate(roadall=as.numeric(coalesce(road.1,0))+as.numeric(coalesce(road.2,0))+as.numeric(coalesce(road.3,0))+as.numeric(coalesce(road.4,0))) %>%
+  filter(roadall!=0)->system2.dta
 
-  area<-toupper(paste(area,' ',sep=''))
 
-if (!is.null(sci_name)) {system2.dta %>% filter(scientific_name==toupper(sci_name),grepl(area,paste(sub_division_fao,' ',sep='')))->results}
+if (!is.null(sci_name)) {system2.dta %>% filter(scientific_name==toupper(sci_name),grepl(area,paste(sub_division_fao,' ',sep=''),fixed=TRUE))->results}
   else(results<-system2.dta )
 
 #g1<-ggplot(results)+geom_sf(aes(fill=fishstock))

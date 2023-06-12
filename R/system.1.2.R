@@ -10,7 +10,7 @@ system.1.2 <- function(sci_name=NULL,area=NULL,stockdef=NULL,limits=NULL,fishdat
 print(paste('First Step for ',sci_name,' in ',area,'for system2 ',sep=''))
 system.2.road1.2.3.4<-system.2(sci_name,area,stockdef,limits,fishdata)
 
-if (dim(system.2.road1.2.3.4)[1]==0)
+if (dim(system.2.road1.2.3.4)[1]==0 )
 {
   print(paste('No answer for system2, Second step for System 1',sep=''))
 if (is.null(iucn.token)){  system.1.road.5.6<-system.1(sci_name,area,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area) %>% mutate(method='system1')

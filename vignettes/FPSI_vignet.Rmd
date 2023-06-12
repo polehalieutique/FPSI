@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+rm(list=ls())
 library(stocksmart)
 library(dplyr)
 library(ggplot2)
@@ -254,12 +255,23 @@ We store the token is a file (outside the github repository)
 
 ```{r}
 
+stockdef<-stockdef.other()
+
+limits<-rbind(limits.noaa(),limits.other(),limits.ices())
+
+fishdata<-rbind(fishdata.noaa(),fishdata.other(),fishdata.ices())
+
+data(iucn.dta)
+data(sensitive.dta)
+data(area.dta)
+data(iucn_to_stock_area)
+
 token<-readLines('/home/jerome/CSTEP_2023/FPSI/iucn.token')
 system.1.iucnws(sci_name='LOPHIUS PISCATORIUS',area='57.',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,token=token)
 
 
 #With ass is global
-system.1.iucnws(sci_name='LOPHIUS PISCATORIUS',area='27.',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,token=token)
+system.1.iucnws(sci_name='GADUS MORHUA',area='27.5.A',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,token=token)
 #With ass is local
 
 system.1.2(sci_name='ANOPLOPOMA FIMBRIA',area='18',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
@@ -278,7 +290,13 @@ score.transcript(system.1.2(sci_name='BROSME BROSME',area='27.1',stockdef,limits
 
 system.2(sci_name='BROSME BROSME',area='27.14.A',stockdef,limits,fishdata)
 
+tmp<-system.1.2(sci_name='GADUS MORHUA',area='27.5.A',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
+score.transcript(system.1.2(sci_name='GADUS MORHUA',area='27',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token))
 
+tmp<-system.1.2(sci_name='ABLENNES HIANS',area='27',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
+
+score.transcript(tmp)
+is.null(tmp$score)
 ```
 
 

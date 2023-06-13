@@ -37,7 +37,7 @@ if (!is.null(dim(iucn.ws$result)))
     {
 iucn.ws$result %>%
     filter(!is.na(category)) %>% distinct(taxonid,scientific_name,published_year,freshwater_system,category) %>%
-    mutate(area.req=area,ass=ass.level)-> system1.road.5
+    mutate(area.req=area,ass=ass.level,scientific_name=toupper(scientific_name))-> system1.road.5
 }
 
   nlignes<-dim(system1.road.5)[1]

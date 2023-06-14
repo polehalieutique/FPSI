@@ -63,7 +63,7 @@ else
 
       system.1.2.dta %>% mutate(road=case_when(category %in% c('NT','VU','CR','EN') ~'road.6',
                                                category %in% c('LC')~'road.7',
-                                               is.na(category) ~'road.8'
+                                               is.na(category) || category %in% c('DD') ~'road.8'
 
       )#First use of more precise and local sensitive list Rindorf and if it's not available then Cheung # Add area 27 maybe
       ,score=case_when(category=='NT' ~'D',
@@ -72,12 +72,12 @@ else
                        category=='LC' & Rindorf_precautionary_F<=3 ~'C',
                        category=='LC' & is.na(Rindorf_precautionary_F) & Cheung_vulnerabilty<=40 ~'B',
                        category=='LC' & is.na(Rindorf_precautionary_F) & Cheung_vulnerabilty>40 ~'C',
-                       is.na(category) & Rindorf_precautionary_F>3   ~'C',
-                       is.na(category) & (Rindorf_precautionary_F>0.41 & Rindorf_precautionary_F<=3) ~'D',
-                       is.na(category) & Rindorf_precautionary_F<=0.41 ~'E',
-                       is.na(category) & is.na(Rindorf_precautionary_F) & Cheung_vulnerabilty <=40   ~'C',
-                       is.na(category) & is.na(Rindorf_precautionary_F) & (Cheung_vulnerabilty >40 &  Cheung_vulnerabilty<70)  ~'D',
-                       is.na(category) & is.na(Rindorf_precautionary_F) & (Cheung_vulnerabilty >=70 ) ~'E'
+                       (is.na(category) || category %in% c('DD'))& Rindorf_precautionary_F>3   ~'C',
+                       (is.na(category) || category %in% c('DD')) & (Rindorf_precautionary_F>0.41 & Rindorf_precautionary_F<=3) ~'D',
+                       (is.na(category) || category %in% c('DD')) & Rindorf_precautionary_F<=0.41 ~'E',
+                       (is.na(category) || category %in% c('DD')) & is.na(Rindorf_precautionary_F) & Cheung_vulnerabilty <=40   ~'C',
+                       (is.na(category) || category %in% c('DD')) & is.na(Rindorf_precautionary_F) & (Cheung_vulnerabilty >40 &  Cheung_vulnerabilty<70)  ~'D',
+                       (is.na(category) || category %in% c('DD')) & is.na(Rindorf_precautionary_F) & (Cheung_vulnerabilty >=70 ) ~'E'
                      )) %>%
         select(scientific_name,fishstock,method,road,score,category,Rindorf_precautionary_F,Cheung_vulnerabilty)->system.1.2.dta
 

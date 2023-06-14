@@ -24,6 +24,7 @@ library(rredlist)
 
 
 
+
 ```
 
 # ICES, NOAA database with specific R packages
@@ -299,9 +300,10 @@ tmp<-system.1.2(sci_name='SQUATINA SQUATINA',area='27.5.A',stockdef,limits,fishd
 score.transcript(system.1.2(sci_name='GADUS MORHUA',area='27',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token))
 
 tmp<-system.1.2(sci_name='ABLENNES HIANS',area='27',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
+tmp<-system.1.2(sci_name='DASYATIS TORTONESEI',area='27',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
 
+#iucn.dta %>% filter(category=='DD') %>% inner_join(sensitive.dta)
 score.transcript(tmp)
-is.null(tmp$score)
 ```
 
 

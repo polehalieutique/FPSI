@@ -72,12 +72,12 @@ else
                        category=='LC' & Rindorf_precautionary_F<=3 ~'C',
                        category=='LC' & is.na(Rindorf_precautionary_F) & Cheung_vulnerabilty<=40 ~'B',
                        category=='LC' & is.na(Rindorf_precautionary_F) & Cheung_vulnerabilty>40 ~'C',
-                       (is.na(category) || category %in% c('DD'))& Rindorf_precautionary_F>3   ~'C',
-                       (is.na(category) || category %in% c('DD')) & (Rindorf_precautionary_F>0.41 & Rindorf_precautionary_F<=3) ~'D',
-                       (is.na(category) || category %in% c('DD')) & Rindorf_precautionary_F<=0.41 ~'E',
-                       (is.na(category) || category %in% c('DD')) & is.na(Rindorf_precautionary_F) & Cheung_vulnerabilty <=40   ~'C',
-                       (is.na(category) || category %in% c('DD')) & is.na(Rindorf_precautionary_F) & (Cheung_vulnerabilty >40 &  Cheung_vulnerabilty<70)  ~'D',
-                       (is.na(category) || category %in% c('DD')) & is.na(Rindorf_precautionary_F) & (Cheung_vulnerabilty >=70 ) ~'E'
+                       (is.na(category) | category %in% c('DD'))& Rindorf_precautionary_F>3   ~'C',
+                       (is.na(category) | category %in% c('DD')) & (Rindorf_precautionary_F>0.41 & Rindorf_precautionary_F<=3) ~'D',
+                       (is.na(category) | category %in% c('DD')) & Rindorf_precautionary_F<=0.41 ~'E',
+                       (is.na(category) | category %in% c('DD')) & is.na(Rindorf_precautionary_F) & Cheung_vulnerabilty <=40   ~'C',
+                       (is.na(category) | category %in% c('DD')) & is.na(Rindorf_precautionary_F) & (Cheung_vulnerabilty >40 &  Cheung_vulnerabilty<70)  ~'D',
+                       (is.na(category) | category %in% c('DD')) & is.na(Rindorf_precautionary_F) & (Cheung_vulnerabilty >=70 ) ~'E'
                      )) %>%
         select(scientific_name,fishstock,method,road,score,category,Rindorf_precautionary_F,Cheung_vulnerabilty)->system.1.2.dta
 

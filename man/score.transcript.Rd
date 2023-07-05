@@ -4,14 +4,15 @@
 \alias{score.transcript}
 \title{Get limits values for  stocks provided by ICES stocksmart packages}
 \usage{
-score.transcript(system.1.2.dta = NULL)
+\method{score}{transcript}(system.1.2.dta = NULL)
 }
 \arguments{
-\item{system.1.2}{date provided by system.1.2 function}
+\item{system.1.2.dta}{data provided by system.1.2 function}
 }
 \description{
 Get limits values for  stocks provided by ICES stocksmart packages
 }
 \examples{
-score<-score.transcript(system.2(ssci_name='SQUATINA SQUATINA',area='27.'))
+score<-score.transcript(system.2(sci_name='SQUATINA SQUATINA',area='27.'))
+
 }

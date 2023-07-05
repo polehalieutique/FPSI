@@ -17,13 +17,16 @@ limits.other <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE,user=
     stock <- dbConnect(drv, host=server, user=user, password=password, dbname=db)
     limits<-dbGetQuery(stock,paste("select evaluationyear,workinggroup,fishstock,flim,fpa,blim,bpa,fmsy,msybtrigger from limits where workinggroup not like 'ICES%' and workinggroup not in ",noaa.include,sep=''))
     dbDisconnect(stock)
+    limits<-limits %>% mutate(FishingPressure=NULL,FishingPressureDescription=NULL)
     return(limits)
   }
   else
   {
 
     data(limits.other.dta)
-    return(limits.other.dta) #I can store data within the package as stocksmart one
+    limits.other.dta<-limits.other.dta %>% mutate(FishingPressure=NA,FishingPressureDescription=NA)
+
+      return(limits.other.dta) #I can store data within the package as stocksmart one
       }
 
 

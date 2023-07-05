@@ -21,6 +21,3 @@ get_area(
 \description{
 Get sf object of all stocks area available
 }
-\examples{
-limits<-limits.ices(Stock_Name='Albacore - North Atlantic',Assessment_Year=2020)
-}

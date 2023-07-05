@@ -37,16 +37,31 @@ if (!is.null(dim(iucn.ws$result)))
     {
 iucn.ws$result %>%
     filter(!is.na(category)) %>% distinct(taxonid,scientific_name,published_year,freshwater_system,category) %>%
-    mutate(area.req=area,ass=ass.level,scientific_name=toupper(scientific_name))-> system1.road.5
+    mutate(area.req=substr(area,1,2),ass=ass.level,scientific_name=toupper(scientific_name))-> system1.road.5
 }
 
   nlignes<-dim(system1.road.5)[1]
+
+  if (substr(area,1,2) %in% c(37,27)) {area.req.sens<-substr(area,1,2)} else {area.req.sens<-'Global'}
+
   if (nlignes==0) {
-    sensitive.dta %>% filter(scientific_name==sci_name) %>% mutate(id_no=NA,yrcompiled=NA,freshwater=NA,category=NA) %>%
-      select (id_no,scientific_name,yrcompiled,freshwater,category,Rindorf_precautionary_F,Cheung_vulnerabilty)->results
+    result.local<-sensitive.dta %>%  dplyr::filter(scientific_name==sci_name & area.req==area.req.sens)%>%
+      dplyr::mutate(id_no=NA,yrcompiled=NA,freshwater=NA,category=NA) %>%
+      dplyr::select (id_no,scientific_name,yrcompiled,freshwater,category,Sensitivity_indicator,source_code,area.req)
+
+
+    result.global<-sensitive.dta %>%
+      dplyr::filter(scientific_name==sci_name & area.req=='Global') %>% dplyr::mutate(id_no=NA,yrcompiled=NA,freshwater=NA,category=NA) %>%
+      dplyr::select (id_no,scientific_name,yrcompiled,freshwater,category,Sensitivity_indicator,source_code,area.req)
+
+    if (is.na(result.local$Sensitivity_indicator)) {results<-result.global} else {results<-result.local}
+
   }else
   {
-    system1.road.5 %>% st_drop_geometry() %>% left_join(sensitive.dta) %>% select(-c(Species,X))->results
+    result.local<-system1.road.5 %>% st_drop_geometry() %>% left_join(sensitive.dta)
+    result.global<-system1.road.5 %>% mutate(area.req='Global') %>%  st_drop_geometry() %>%
+      left_join(sensitive.dta)
+    if (is.na(result.local$Sensitivity_indicator)) {results<-result.global} else {results<-result.local}
   }
 
 results %>% mutate(fishstock=paste(scientific_name,area,sep='+'))->results

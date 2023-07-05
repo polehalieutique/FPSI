@@ -2,7 +2,7 @@
 #' @param Stock_Name to get data for a specified stock
 #' @param Assessment_Year to get data for a specified stock
 #' @examples
-#' limits<-fishdata.noaa(Stock_Name='Albacore - North Atlantic',Assessment_Year=2020)
+#' fishdata.noaa.dta<-fishdata.noaa(Stock_Name='Albacore - North Atlantic',Assessment_Year=2020)
 #'
 #' @export
 #'

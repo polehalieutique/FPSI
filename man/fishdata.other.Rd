@@ -23,6 +23,6 @@ fishdata.other(
 Get fishadata values for stocks provided by NOAA stocksmart packages
 }
 \examples{
-limits<-fishdata.noaa(Stock_Name='Albacore - North Atlantic',Assessment_Year=2020)
+fishdata.noaa.dta<-fishdata.noaa(Stock_Name='Albacore - North Atlantic',Assessment_Year=2020)
 
 }

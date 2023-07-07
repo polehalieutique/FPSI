@@ -27,22 +27,21 @@ fishdata %>%  dplyr::inner_join(last.Eval.year) %>% dplyr::group_by(fishstock,ev
   dplyr::summarize(maxyear=max(year)-6)->last.ts.year
 
 
-
 #Modification to take into account Fishing pressure alternatives
 system2.dta<- stockdef %>%
   right_join(
     fishdata %>% inner_join(last.ts.year) %>% dplyr::filter(year>maxyear) %>%
       dplyr::inner_join (limits) %>%
-      dplyr::mutate(f_fmsy=case_when(is.null(FishingPressureDescription) | FishingPressureDescription=='F' ~meanf/fmsy,
+      dplyr::mutate(f_fmsy=case_when(is.na(FishingPressureDescription) | FishingPressureDescription=='F' ~meanf/fmsy,
                               FishingPressureDescription %in% c('HRrel','Frel','Harvest rate')~ FishingPressure),b_bmsy=ssb/msybtrigger,
              FishingPressureDescription=case_when(!is.na(FishingPressureDescription)~FishingPressureDescription,
                                                                                            TRUE ~ 'F')) %>%
-      dplyr::group_by(fishstock,FishingPressureDescription) %>% dplyr::summarize(mean.f_fmsy=mean(f_fmsy,na.rm=TRUE),mean.b_bmsy=mean(b_bmsy,na.rm=TRUE),road.1=mean.b_bmsy<0.8,
+            dplyr::group_by(fishstock,FishingPressureDescription) %>% dplyr::summarize(mean.f_fmsy=mean(f_fmsy,na.rm=TRUE),mean.b_bmsy=mean(b_bmsy,na.rm=TRUE),road.1=mean.b_bmsy<0.8,
               road.2=mean.b_bmsy>=0.8 && !is.na(mean.f_fmsy),
               road.3=mean.b_bmsy>=0.8 && is.na(mean.f_fmsy),
               road.4=is.na(mean.b_bmsy) && !is.na(mean.f_fmsy) ,nb.eval=n(),eval.year=mean(evaluationyear,na.rm=TRUE),
               f_fmsy=paste(f_fmsy,collapse='/'),b_bmsy=paste(b_bmsy,collapse='/'))) %>%
-  dplyr::mutate(roadall=as.numeric(coalesce(road.1,0))+as.numeric(coalesce(road.2,0))+as.numeric(coalesce(road.3,0))+as.numeric(coalesce(road.4,0)))
+    dplyr::mutate(roadall=as.numeric(coalesce(road.1,0))+as.numeric(coalesce(road.2,0))+as.numeric(coalesce(road.3,0))+as.numeric(coalesce(road.4,0)))
   #filter(roadall!=0)
 
 if (!is.null(sci_name)) {system2.dta %>% dplyr::filter(scientific_name==toupper(sci_name),grepl(area,paste(sub_division_fao,' ',sep=''),fixed=TRUE))->results}

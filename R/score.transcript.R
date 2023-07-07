@@ -2,10 +2,8 @@
 #' @param system.1.2.dta data provided by system.1.2 function
 #' @examples
 #' score<-score.transcript(system.2(sci_name='SQUATINA SQUATINA',area='27.'))
-#'
 #' @export
-#'
-score.transcript<- function(system.1.2.dta=NULL) {
+score.transcript <- function(system.1.2.dta=NULL) {
 
 if (system.1.2.dta$method[1]=="No answer, nor for system2, nor system1")
 {

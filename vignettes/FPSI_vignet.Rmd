@@ -257,7 +257,7 @@ We store the token is a file (outside the github repository)
 ```{r}
 stockdef<-stockdef.other()
 
-limits<-rbind(limits.noaa(),limits.other(),limits.ices())
+limits<-rbind(limits.ices(),limits.noaa(),limits.other())
 
 fishdata<-rbind(fishdata.noaa(),fishdata.other(),fishdata.ices())
 
@@ -269,12 +269,23 @@ data(iucn_to_stock_area)
 token<-readLines('/home/jerome/CSTEP_2023/FPSI/iucn.token')
 system.1.iucnws(sci_name='LOPHIUS PISCATORIUS',area='57.',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,token=token)
 
+limits %>% filter(is.na(fmsy) & is.na(msybtrigger)  & evaluationyear==2022) %>% dplyr::distinct (FishingPressureDescription) 
 
+limits %>% filter(is.na(fmsy) & is.na(msybtrigger) & FishingPressureDescription=='HRrel') %>% 
+  arrange(desc(evaluationyear))
 #With ass is global
 sensitive.dta
-system.1.iucnws(sci_name='ACANTHOLABRUS PALLONI',area='27',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,token=token)
+
 
 system.1(sci_name='ACANTHOLABRUS PALLONI',area='27',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
+
+stockdef %>% filter(fishstock=='aru.27.123a4')
+
+tmp<-system.2(sci_name='ARGENTINA SILUS',area='27',stockdef,limits,fishdata)
+
+system.1.iucnws(sci_name='ALOPIAS VULPINUS',area='37',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,token=token)
+system.1(sci_name='ALOPIAS VULPINUS',area='27',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
+
 #With ass is local
 ```
 
@@ -297,13 +308,62 @@ score.transcript(system.1.2(sci_name='BROSME BROSME',area='27.1',stockdef,limits
 system.2(sci_name='BROSME BROSME',area='27.14.A',stockdef,limits,fishdata)
 
 tmp<-system.1.2(sci_name='SQUATINA SQUATINA',area='27.5.A',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
-score.transcript(system.1.2(sci_name='GADUS MORHUA',area='27',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token))
+score.transcript(system.1.2(sci_name='SOLEA SOLEA',area='34',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token))
 
 tmp<-system.1.2(sci_name='ABLENNES HIANS',area='27',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
 tmp<-system.1.2(sci_name='DASYATIS TORTONESEI',area='27',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
 
+stoc
+tmp<-system.1.2(sci_name='ARGENTINA SILUS',area='37',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
+
 #iucn.dta %>% filter(category=='DD') %>% inner_join(sensitive.dta)
 score.transcript(tmp)
+system.1.2(sci_name='Dicentrarchus labrax',area='27.8.C',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
+
+score.transcript(system.1.2(sci_name='Dicentrarchus labrax',area='27.8.C',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token))
+
+score.transcript(system.1.2(sci_name=' SPRATTUS SPRATTUS',area='27.7.A',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token))
+test<-system.1.2(sci_name=' SPRATTUS SPRATTUS',area='27.7.A',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
+
+
+system.2(sci_name='Theragra chalcogramma',area='EASTERN BERING SEA',stockdef,limits,fishdata)
+
+
+
+```
+On a une vrai question quand on fait Bar sur 27.8 on a 2 stock 1 avec score A et un sans score en system 2. L'autre stock est C en system 1. Donc avoir une zone plus large est plus interessante. Est ce qu'il faudrait faire les 2 2 score et 
+
+# Datail for Solea Solea area 27.7.D
+
+```{r}
+system.2(sci_name='SOLEA SOLEA',area='67',stockdef,limits,fishdata)
+
+monstock<-stockdef %>% filter(scientific_name=='SOLEA SOLEA',grepl('27.7.D',sub_division_fao))
+
+ggplot(monstock)+ geom_sf()+ggtitle(monstock$fishstock)
+
+lastyear<-max((limits %>% filter(fishstock==monstock$fishstock))$evaluationyear)
+
+limits %>% filter(fishstock==monstock$fishstock & evaluationyear==lastyear)
+
+fishdata %>% filter(fishstock==monstock$fishstock & evaluationyear==lastyear) %>% arrange(desc(year))
+
+tmp<-score.transcript(system.1.2(sci_name='ARGENTINA SILUS',area='67',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token))
+
+tmp %>% st_drop_geometry() %>% 
+  kbl()%>%
+  kable_styling()
+
+score.transcript(tmp)
+
+iucn.dta %>% st_drop_geometry() %>% 
+  kbl()%>%
+  kable_styling()
+
+
+sensitive.dta %>% st_drop_geometry() %>% 
+  kbl()%>%
+  kable_styling()
 ```
 
 
@@ -355,6 +415,9 @@ The link between stock and IUCN area are the intersction between the two polygon
 
 ```{r}
 
+#limits.ices.dta<-limits.ices(update=TRUE,from=2023)
+
+
 
 stockdef<-stockdef.other()
 
@@ -400,6 +463,27 @@ system2.iucn.tmp.reste %>% left_join(sensitive.dta) %>% filter(!is.na(Rindorf_pr
 system2.iucn.tmp.reste %>% left_join(sensitive.dta) %>% filter(is.na(Rindorf_precautionary_F))->system2.iucn.sensitive.reste
 
 ```
+
+
+bss-27.8.c9a et caa.27.5a ne fonctionne pas. 
+Le second pas dans stock def ?
+
+```{r}
+
+system.2("Anarhichas lupus",27)
+limits %>% filter(fishstock=='caa.27.5a')
+data("stockdef.other.dta")
+stockdef.other.dta %>% filter(fishstock=='san.sa.5r')
+
+limits %>% left_join(stockdef) %>% filter(is.na(species_code) & evaluationyear>2016 & workinggroup=='ICES') %>% as.tibble()%>% 
+  dplyr::select(fishstock) %>% 
+  dplyr::distinct (fishstock)->toto
+
+#Tous les stocks a ajouter dans stock def
+stock
+
+```
+
 
 
 The end here ?

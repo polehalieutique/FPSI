@@ -33,7 +33,8 @@ system2.dta<- stockdef %>%
     fishdata %>% inner_join(last.ts.year) %>% dplyr::filter(year>maxyear) %>%
       dplyr::inner_join (limits) %>%
       dplyr::mutate(f_fmsy=case_when(is.na(FishingPressureDescription) | FishingPressureDescription=='F' ~meanf/fmsy,
-                              FishingPressureDescription %in% c('HRrel','Frel','Harvest rate')~ FishingPressure),b_bmsy=ssb/msybtrigger,
+                              FishingPressureDescription %in% c('HRrel','Frel','Harvest rate')~ FishingPressure),
+                    msybtrigger_or_prox=case_when(!is.na(msybtrigger)~ msybtrigger,is.na(msybtrigger) & !is.na(bpa)~bpa),  b_bmsy=ssb/msybtrigger_or_prox,
              FishingPressureDescription=case_when(!is.na(FishingPressureDescription)~FishingPressureDescription,
                                                                                            TRUE ~ 'F')) %>%
             dplyr::group_by(fishstock,FishingPressureDescription) %>% dplyr::summarize(mean.f_fmsy=mean(f_fmsy,na.rm=TRUE),mean.b_bmsy=mean(b_bmsy,na.rm=TRUE),road.1=mean.b_bmsy<0.8,

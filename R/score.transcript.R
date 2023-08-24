@@ -3,7 +3,8 @@
 #' @examples
 #' score<-score.transcript(system.2(sci_name='SQUATINA SQUATINA',area='27.'))
 #' @export
-score.transcript <- function(system.1.2.dta=NULL) {
+
+score.transcript<-function(system.1.2.dta=NULL) {
 
 if (system.1.2.dta$method[1]=="No answer, nor for system2, nor system1")
 {
@@ -14,13 +15,14 @@ return(tmp)
 }
 else
 {
-  if (system.1.2.dta$method[1]=='system2')
+  mix.systems<-(length(unique(system.1.2.dta$method))==2)
+  if (system.1.2.dta$method[1]=='system2' |mix.systems)
   {
 
     print('System2 detected')
 
 
-    system.1.2.dta %>% mutate(road=case_when(road.1~'road.1',
+    system.1.2.dta %>% filter(method=='system2') %>% mutate(road=case_when(road.1~'road.1',
                                              road.2~'road.2',
                                              road.3~'road.3',
                                              road.4~'road.4'
@@ -41,22 +43,23 @@ else
                                                             road.4 & (mean.f_fmsy>=2)~'E'
 
     )) %>%
-      select (fishstock,species_code,scientific_name,method,road,score,sub_division_fao,FishingPressureDescription,mean.f_fmsy,mean.b_bmsy,road.1,road.2,road.3,road.4,nb.eval,eval.year,f_fmsy,b_bmsy,roadall)        ->system.1.2.dta
+      select (fishstock,species_code,scientific_name,method,road,score,sub_division_fao,FishingPressureDescription,mean.f_fmsy,mean.b_bmsy,road.1,road.2,road.3,road.4,nb.eval,eval.year,f_fmsy,b_bmsy,roadall)        ->system.1.2.dta.system2
 
-    return(system.1.2.dta)
+    if (!mix.systems) result<-system.1.2.dta.system2
+
       }
 
 
-  }
 
 
 
 
-    if (system.1.2.dta$method[1]=='system1')
+
+    if (system.1.2.dta$method[1]=='system1' |mix.systems)
   {
       print('System1 detected')
 
-      system.1.2.dta %>% mutate(road=case_when(category %in% c('NT','VU','CR','EN') ~'road.6',
+      system.1.2.dta %>% filter(method=='system1') %>%  mutate(road=case_when(category %in% c('NT','VU','CR','EN') ~'road.6',
                                                category %in% c('LC')~'road.7',
                                                is.na(category) || category %in% c('DD') ~'road.8'
 
@@ -79,10 +82,14 @@ else
                        (is.na(category) | category %in% c('DD')) & source_code=='O' & (Sensitivity_indicator >1.6 &  Sensitivity_indicator<=2)  ~'D',
                        (is.na(category) | category %in% c('DD')) & source_code=='O' & (Sensitivity_indicator >2 ) ~'E'
                      )) %>%
-        select(scientific_name,fishstock,method,road,score,category,source_code,Sensitivity_indicator)->system.1.2.dta
+        select(scientific_name,fishstock,method,road,score,category,source_code,Sensitivity_indicator)->system.1.2.dta.system1
 
 
 
-  return(system.1.2.dta)
-  }
+      if (!mix.systems) result<-system.1.2.dta.system1
+    }
+  if (mix.systems) result<-bind_rows(system.1.2.dta.system2,system.1.2.dta.system1)
+
+  return(result)
+}
 }

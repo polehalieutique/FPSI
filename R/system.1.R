@@ -27,7 +27,9 @@ sf::sf_use_s2(FALSE)
 
 
   nlignes<-dim(system1.road.5)[1]
-  if (substr(area,1,2) %in% c(37,27)) {area.req.sens<-substr(area,1,2)} else {area.req.sens<-'Global'}
+  if (substr(area,1,2) %in% c('37','27','SA')) {area.req.sens<-substr(area,1,2)
+  if (area.req.sens=='SA') {area.req.sens='37'}
+  } else {area.req.sens<-'Global'}
 
   if (nlignes==0) {
     result.local<-sensitive.dta %>%  dplyr::filter(scientific_name==sci_name & area.req==area.req.sens)%>%

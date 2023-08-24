@@ -18,12 +18,12 @@ sf::sf_use_s2(FALSE)
 #  filter(area.dta,grepl(toupper(area), sub_division_fao)) %>% st_union() %>%
 #    st_as_sf() %>% st_join(filter(iucn.dta,scientific_name==sci_name)) %>%
 #    filter(!is.na(category)) %>% distinct()-> system1.road.5
-region.global<-'global'
+region.global<-'Global'
 region.local<-''
 iucn.ws<-data.frame(result=NULL)
 system1.road.5<-data.frame()
 if (substr(area,1,2)=='27') region.local<-'europe'
-if (substr(area,1,2)=='37') region.local<-'mediterranean'
+if (substr(area,1,2)=='37' || substr(area,1,2)=='SA') region.local<-'mediterranean'
 if (substr(area,1,2)=='34') region.local<-'western_africa'
 
 if (region.local!='') {iucn.ws<-rl_search(sci_name, region = region.local,key=token)
@@ -33,16 +33,23 @@ iucn.ws<-rl_search(sci_name, region = region.global,key=token)
 ass.level<-'global'
 }
 
-if (!is.null(dim(iucn.ws$result)))
-    {
-iucn.ws$result %>%
-    filter(!is.na(category)) %>% distinct(taxonid,scientific_name,published_year,freshwater_system,category) %>%
-    mutate(area.req=substr(area,1,2),ass=ass.level,scientific_name=toupper(scientific_name))-> system1.road.5
-}
+
+
+
+  area.req.sens<-'Global'
+  if (substr(area,1,2) %in% c('37','27','SA')) {
+
+  if (substr(area,1,2)=='SA') {area.req.sens<-'37'} else {area.req.sens<-substr(area,1,2)}
+  }
+
+  if (!is.null(dim(iucn.ws$result)))
+  {
+      iucn.ws$result %>%
+      filter(!is.na(category)) %>% distinct(taxonid,scientific_name,published_year,freshwater_system,category) %>%
+      mutate(area.req=area.req.sens,ass=ass.level,scientific_name=toupper(scientific_name))-> system1.road.5
+  }
 
   nlignes<-dim(system1.road.5)[1]
-
-  if (substr(area,1,2) %in% c(37,27)) {area.req.sens<-substr(area,1,2)} else {area.req.sens<-'Global'}
 
   if (nlignes==0) {
     result.local<-sensitive.dta %>%  dplyr::filter(scientific_name==sci_name & area.req==area.req.sens)%>%
@@ -58,7 +65,7 @@ iucn.ws$result %>%
 
   }else
   {
-    result.local<-system1.road.5 %>% st_drop_geometry() %>% left_join(sensitive.dta)
+    result.local<-system1.road.5 %>% st_drop_geometry() %>% left_join(sensitive.dta %>% dplyr::filter(scientific_name==sci_name & area.req==area.req.sens))
     result.global<-system1.road.5 %>% mutate(area.req='Global') %>%  st_drop_geometry() %>%
       left_join(sensitive.dta)
     if (is.na(result.local$Sensitivity_indicator)) {results<-result.global} else {results<-result.local}

@@ -4,7 +4,7 @@
 \alias{score.transcript}
 \title{Get limits values for  stocks provided by ICES stocksmart packages}
 \usage{
-\method{score}{transcript}(system.1.2.dta = NULL)
+score.transcript(system.1.2.dta = NULL)
 }
 \arguments{
 \item{system.1.2.dta}{data provided by system.1.2 function}

@@ -25,7 +25,8 @@ else
     system.1.2.dta %>% filter(method=='system2') %>% mutate(road=case_when(road.1~'road.1',
                                              road.2~'road.2',
                                              road.3~'road.3',
-                                             road.4~'road.4'
+                                             road.4~'road.4',
+                                             road.5~'road.5'
                                             )
                                              ,score=case_when(road.1 & mean.b_bmsy <0.5~'E',
                                                             road.1 & (mean.b_bmsy>=0.5 & mean.b_bmsy <0.8)~'D',
@@ -40,10 +41,15 @@ else
                                                             road.4 & (mean.f_fmsy>=0 & mean.f_fmsy <1)~'B',
                                                             road.4 & (mean.f_fmsy>=1 & mean.f_fmsy <1.5)~'C',
                                                             road.4 & (mean.f_fmsy>=1.5 & mean.f_fmsy <2)~'D',
-                                                            road.4 & (mean.f_fmsy>=2)~'E'
+                                                            road.4 & (mean.f_fmsy>=2)~'E',
+                                                            road.5 & (mean.catch.advice<=1)~'B',
+                                                            road.5 & (mean.catch.advice>1 & mean.catch.advice<=1.5)~'C',
+                                                            road.5 & (mean.catch.advice>1.5 & mean.catch.advice<=2)~'D',
+                                                            road.5 & (mean.catch.advice>2)~'E'
+
 
     )) %>%
-      select (fishstock,species_code,scientific_name,method,road,score,sub_division_fao,FishingPressureDescription,mean.f_fmsy,mean.b_bmsy,road.1,road.2,road.3,road.4,nb.eval,eval.year,f_fmsy,b_bmsy,roadall)        ->system.1.2.dta.system2
+      select (fishstock,species_code,scientific_name,method,road,score,sub_division_fao,FishingPressureDescription,mean.f_fmsy,mean.b_bmsy,mean.catch.advice, road.1,road.2,road.3,road.4,road.5,nb.eval,eval.year,f_fmsy,b_bmsy,roadall)        ->system.1.2.dta.system2
 
     if (!mix.systems) result<-system.1.2.dta.system2
 

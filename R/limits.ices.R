@@ -28,8 +28,6 @@ masliste<-    extractmalisteSAG %>% inner_join(Last.year) %>% dplyr::filter(Year
 
 
 
-
-
     # masliste<-lapply(getFishStockReferencePoints(assessments$AssessmentKey), function(x) x%>% select(matches("AssessmentKey|StockKeyLabel|StockDatabaseID|StockKey|AssessmentYear|FLim|Fpa|Bpa|Blim|FMSY|MSYBtrigger")))
     #
     # limits.tmp  <- do.call("bind_rows",masliste)

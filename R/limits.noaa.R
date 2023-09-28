@@ -12,10 +12,16 @@ limits.noaa <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE) {
   }
 
   names(stockAssessmentSummary)<-gsub(' ','_',names(stockAssessmentSummary))
+  stockAssessmentData %>% filter(Metric=='Fmort') %>%
+    mutate(Stock_Name=StockName,Assessment_Year=AssessmentYear) %>%
+    distinct(Assessment_Year,Stock_Name,Metric,Units)->F_type
 
 
-  limits<-stockAssessmentSummary %>% dplyr::mutate(evaluationyear=Assessment_Year,workinggroup=Jurisdiction,fishstock=Stock_Name,flim=Flimit,
-                                            fpa=Ftarget,blim=Blimit,bpa=NA,fmsy=Fmsy,msybtrigger=Bmsy) %>%
+
+  limits<-stockAssessmentSummary %>% filter(Assessment_Year==2020) %>% inner_join(F_type) %>% dplyr::mutate(evaluationyear=Assessment_Year,workinggroup=Jurisdiction,fishstock=Stock_Name,flim=Flimit,
+                                            fpa=Ftarget,blim=Blimit,bpa=NA,
+                                            fmsy=case_when(Metric=='Fmort'  & Units %in% c('Rate','Ratio') ~1,
+                                                                              TRUE ~Fmsy),msybtrigger=Bmsy) %>%
     dplyr::select(evaluationyear,workinggroup,fishstock,flim,fpa,blim,bpa,fmsy,msybtrigger) %>%
     dplyr::group_by(evaluationyear,workinggroup,fishstock) %>%
     dplyr::summarize(flim=mean(flim),fpa=mean(fpa),blim=mean(blim),bpa=mean(bpa),fmsy=mean(fmsy),msybtrigger=mean(msybtrigger)) %>%

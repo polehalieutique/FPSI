@@ -13,7 +13,7 @@ system.2.road1.2.3.4.5<-system.2(sci_name,area,stockdef,limits,fishdata) %>% mut
 mix.systems<-length(unique(system.2.road1.2.3.4.5$roadall))==2
 if (dim(system.2.road1.2.3.4.5)[1]==0 | sum(as.numeric(system.2.road1.2.3.4.5$roadall))==0 |mix.systems)
 {
-  print(paste('No answer for system2, Second step for System 1',sep=''))
+  print(paste('No answer for system2 or mixed system 1 and 2, Second step for System 1',sep=''))
 if (is.null(iucn.token)){  system.1.road.5.6<-system.1(sci_name,area,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area) %>% mutate(method='system1')
 } else
 {

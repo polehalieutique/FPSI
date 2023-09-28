@@ -22,6 +22,7 @@ region.global<-'Global'
 region.local<-''
 iucn.ws<-data.frame(result=NULL)
 system1.road.5<-data.frame()
+
 if (substr(area,1,2)=='27') region.local<-'europe'
 if (substr(area,1,2)=='37' || substr(area,1,2)=='SA') region.local<-'mediterranean'
 if (substr(area,1,2)=='34') region.local<-'western_africa'
@@ -32,8 +33,6 @@ if (is.null(dim(iucn.ws$result))) {
 iucn.ws<-rl_search(sci_name, region = region.global,key=token)
 ass.level<-'global'
 }
-
-
 
 
   area.req.sens<-'Global'

@@ -7,7 +7,12 @@
 #'
 system.1 <- function(sci_name=NULL,area=NULL,iucn.dta=NULL,sensitive.dta=NULL,area.dta=NULL,iucn_to_stock_area=NULL,longitude=NULL,latitude=NULL) {
 
-if (!is.null(iucn.dta)) {data(iucn.dta)}
+#Update the 28/11/2023
+#After discussion with  David Allen from IUCN
+#I will use data downloadable from   https://www.iucnredlist.org/search?permalink=f48c3b99-8900-48e8-993c-590343ad5e4f
+#Regarding the "no more available" webservice
+
+  if (!is.null(iucn.dta)) {data(iucn.dta)}
 if (!is.null(sensitive.dta)) {data(sensitive.dta)}
 
 sf::sf_use_s2(FALSE)

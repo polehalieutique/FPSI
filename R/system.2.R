@@ -26,6 +26,9 @@ if (is.null(stockdef) && is.null(limits) && is.null(fishdata))
 fishdata %>%  dplyr::inner_join(last.Eval.year) %>% dplyr::group_by(fishstock,evaluationyear) %>%
   dplyr::summarize(maxyear=max(year)-6)->last.ts.year
 
+#last.Eval.year<-last.Eval.year %>% filter(fishstock=='Pacific cod - Bering Sea')
+#test<-limits %>% filter(fishstock=='Pacific cod - Bering Sea') %>% distinct(evaluationyear)
+#limits %>% filter(fishstock=='Pacific cod - Bering Sea' )
 
 #Modification to take into account Fishing pressure alternatives
 
@@ -52,7 +55,7 @@ system2.dta<- stockdef %>%
 
 if (!is.null(sci_name)) {
 
-  system2.dta %>% dplyr::filter(scientific_name==toupper(sci_name) & (grepl(paste(area,'.',sep=''),paste(sub_division_fao,' ',sep=''),fixed=TRUE)
+  system2.dta %>% dplyr::filter(scientific_name==toupper(sci_name) & (grepl(paste('.',area,'.',sep=''),paste(sub_division_fao,' ',sep=''),fixed=TRUE)
 | grepl(paste(area,' ',sep=''),paste(sub_division_fao,' ',sep=''),fixed=TRUE)))->results
   }
   else(results<-system2.dta )

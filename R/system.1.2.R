@@ -23,7 +23,7 @@ if (is.null(iucn.token)){
   system.1.road.5.6<-system.1.iucnws(sci_name,area,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,token=iucn.token) %>% mutate(method='system1')
 
 }
-  if (dim(system.1.road.5.6)[1]==0)
+  if (dim(system.1.road.5.6)[1]==0 & !mix.systems)
   { tmp<-data.frame(method="No answer, nor for system2, nor system1")
     print(tmp)
   }
@@ -33,10 +33,15 @@ if (is.null(iucn.token)){
       tmp<-system.2.road1.2.3.4.5 %>% mutate(method="system2") %>% filter(roadall==1) %>% mutate(category=NA,freshwater_system=NA,area.req=NA,ass=NA,source_code=NA,Sensitivity_indicator=NA,Indicator_source=NA) %>%
         st_drop_geometry()
 
+      if (length(system.1.road.5.6$id_no)>0)
+      {
       tmp.system1<-system.2.road1.2.3.4.5 %>% filter(roadall==0) %>% st_drop_geometry()%>%
         inner_join(select(system.1.road.5.6,-fishstock),by=c('scientific_name'))
-
       results<-tmp %>% dplyr::bind_rows(tmp.system1)
+      }else
+      {results<-tmp}
+
+
       return(results)
      }
     else( return(system.1.road.5.6 ))

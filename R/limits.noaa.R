@@ -18,7 +18,7 @@ limits.noaa <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE) {
 
 
 
-  limits<-stockAssessmentSummary %>% filter(Assessment_Year==2020) %>% inner_join(F_type) %>% dplyr::mutate(evaluationyear=Assessment_Year,workinggroup=Jurisdiction,fishstock=Stock_Name,flim=Flimit,
+  limits<-stockAssessmentSummary %>% inner_join(F_type) %>% dplyr::mutate(evaluationyear=Assessment_Year,workinggroup=Jurisdiction,fishstock=Stock_Name,flim=Flimit,
                                             fpa=Ftarget,blim=Blimit,bpa=NA,
                                             fmsy=case_when(Metric=='Fmort'  & Units %in% c('Rate','Ratio') ~1,
                                                                               TRUE ~Fmsy),msybtrigger=Bmsy) %>%
@@ -26,5 +26,8 @@ limits.noaa <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE) {
     dplyr::group_by(evaluationyear,workinggroup,fishstock) %>%
     dplyr::summarize(flim=mean(flim),fpa=mean(fpa),blim=mean(blim),bpa=mean(bpa),fmsy=mean(fmsy),msybtrigger=mean(msybtrigger)) %>%
     mutate(FishingPressure=NA,FishingPressureDescription=NA)
+
+
+
   return(limits)
 }

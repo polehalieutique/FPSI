@@ -13,12 +13,12 @@ if (update) {
 }
 
   names(stockAssessmentData)<-gsub(' ','_',names(stockAssessmentData))
-  names(stockAssessmentSummary)<-gsub(' ','_',names(stockAssessmentSummary))
+  names(stockAssessmentSummary)<-gsub(' |/','_',names(stockAssessmentSummary))
 
-  names(stockAssessmentSummary)
-  stockAssessmentSummary %>% select(Stock_Name,Assessment_Year,B_Year,Estimated_B) %>%
+  #names(stockAssessmentSummary)
+  stockAssessmentSummary %>% select(Stock_Name,Assessment_Year,B_Year,Estimated_B,F_Fmsy,Estimated_F,Jurisdiction) %>%
     mutate(AssessmentYear=Assessment_Year,StockName=Stock_Name,Year=B_Year,tbiomass=Estimated_B) %>%
-    select(AssessmentYear,StockName,Year,tbiomass)->extract_biomass
+    select(AssessmentYear,StockName,Year,tbiomass,F_Fmsy,Estimated_F,Jurisdiction)->extract_biomass
 
 
 
@@ -32,7 +32,19 @@ if (update) {
                   recruitment=Recruitment,tbiomass=tbiomass,ssb=NA,landings=Catch,yieldssb=NA,
                   meanf=Fmort,sop=NA,discards=NA,low_f=NA,high_f=NA) %>%
     dplyr::select(evaluationyear,workinggroup,fishstock,year,recruitment,tbiomass,ssb,landings,yieldssb,meanf,sop,discards,low_f,high_f)%>% dplyr::group_by(evaluationyear,workinggroup,fishstock,year) %>%
-    dplyr::summarise(recruitment=mean(recruitment),tbiomass=mean(tbiomass),ssb=mean(ssb),landings=mean(landings),yieldssb=mean(yieldssb),meanf=mean(meanf),sop=mean(sop),discards=mean(discards),low_f=mean(low_f),high_f=mean(high_f))
+    dplyr::summarise(recruitment=mean(recruitment),tbiomass=mean(tbiomass),ssb=mean(ssb),landings=mean(landings),yieldssb=mean(yieldssb),meanf=mean(meanf),sop=mean(sop),discards=mean(discards),
+                     low_f=mean(low_f),high_f=mean(high_f))
+
+
+  #To extract fishdata when limits stock is describe in limit part (stockassessement summary but not in fishdata)
+  fishdata_plus<-extract_biomass %>% left_join(fisdata.new) %>% filter(is.na(Fmort) & !is.na(F_Fmsy) & AssessmentYear>2017) %>%
+  dplyr::mutate(evaluationyear=AssessmentYear,workinggroup=Jurisdiction,fishstock=StockName,year=Year,
+                recruitment=Recruitment,tbiomass=tbiomass,ssb=NA,landings=Catch,yieldssb=NA,
+                meanf=F_Fmsy,sop=NA,discards=NA,low_f=NA,high_f=NA) %>%
+    dplyr::select(evaluationyear,workinggroup,fishstock,year,recruitment,tbiomass,ssb,landings,yieldssb,meanf,sop,discards,low_f,high_f)%>% dplyr::group_by(evaluationyear,workinggroup,fishstock,year)
+
+  fishdata<-rbind(fishdata,fishdata_plus)
 
   return(fishdata)
 }
+

@@ -11,16 +11,18 @@ limits.noaa <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE) {
     get_latest_full_assessment(itis = NULL) # To replace StockassessmentData and stockAssessmentSummary
   }
 
-  names(stockAssessmentSummary)<-gsub(' ','_',names(stockAssessmentSummary))
+  names(stockAssessmentSummary)<-gsub(' |/','_',names(stockAssessmentSummary))
   stockAssessmentData %>% filter(Metric=='Fmort') %>%
     mutate(Stock_Name=StockName,Assessment_Year=AssessmentYear) %>%
     distinct(Assessment_Year,Stock_Name,Metric,Units)->F_type
 
 
 
-  limits<-stockAssessmentSummary %>% inner_join(F_type) %>% dplyr::mutate(evaluationyear=Assessment_Year,workinggroup=Jurisdiction,fishstock=Stock_Name,flim=Flimit,
+#Passer en left_join et voir comment cele se passe
+  limits<-stockAssessmentSummary %>% left_join(F_type) %>% dplyr::mutate(evaluationyear=Assessment_Year,workinggroup=Jurisdiction,fishstock=Stock_Name,flim=Flimit,
                                             fpa=Ftarget,blim=Blimit,bpa=NA,
                                             fmsy=case_when(Metric=='Fmort'  & Units %in% c('Rate','Ratio') ~1,
+                                                        is.na(Estimated_F) & !is.na(F_Fmsy) ~1,
                                                                               TRUE ~Fmsy),msybtrigger=Bmsy) %>%
     dplyr::select(evaluationyear,workinggroup,fishstock,flim,fpa,blim,bpa,fmsy,msybtrigger) %>%
     dplyr::group_by(evaluationyear,workinggroup,fishstock) %>%
@@ -28,6 +30,6 @@ limits.noaa <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE) {
     mutate(FishingPressure=NA,FishingPressureDescription=NA)
 
 
-
   return(limits)
 }
+

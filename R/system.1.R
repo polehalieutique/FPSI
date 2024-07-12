@@ -11,12 +11,14 @@ system.1 <- function(sci_name=NULL,area=NULL,iucn.dta=NULL,sensitive.dta=NULL,ar
 #After discussion with  David Allen from IUCN
 #I will use data downloadable from   https://www.iucnredlist.org/search?permalink=f48c3b99-8900-48e8-993c-590343ad5e4f
 #Regarding the "no more available" webservice
-
-  if (!is.null(iucn.dta)) {data(iucn.dta)}
+if (!is.null(iucn.dta)) {data(iucn.dta)}
 if (!is.null(sensitive.dta)) {data(sensitive.dta)}
 #A test where we only keep Cheung 2005 / Source code renamed C
 #
+#  unique(sensitive.dta$Indicator_source)
 sensitive.dta %>% filter(Indicator_source!='Cheung_et_al_2007')->sensitive.dta
+#On revient pre cheunc
+#sensitive.dta %>% filter(Indicator_source!='Cheung_et_al_2005_sealifebase_fishbase')->sensitive.dta
 sf::sf_use_s2(FALSE)
 
 

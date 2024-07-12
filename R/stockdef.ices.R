@@ -13,7 +13,7 @@ stockdef.ices <- function(update=FALSE) {
   if (update)
   {
     if (is.null(to)) {to=as.numeric(format(Sys.time(), "%Y"))}
-    assessments <- getListStocks(seq(from,to))
+    assessments <- StockList(seq(from,to))
 
     assessments %>%  dplyr::filter(Purpose=="Advice")->assessments
 

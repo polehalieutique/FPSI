@@ -2,7 +2,7 @@
 #' @param Stock_Name to get data for a specified stock
 #' @param Assessment_Year to get data for a specified stock
 #' @examples
-#' limits<-limits.ices(Stock_Name='Albacore - North Atlantic',Assessment_Year=2020)
+#' limits<-limits.ices(Stock_Name='Albacore - North Atlantic',Assessment_Year=2020) from=2024
 #' @export
 
 limits.ices <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE,from=2018,to=NULL,average.nbyear=NULL,exclude=NULL) {
@@ -39,10 +39,11 @@ limits.ices <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE,from=2
 
 masliste<-    extractmalisteSAG %>% inner_join(Last.year) %>% dplyr::filter(Year>=Year.keep) %>%
   dplyr::group_by(AssessmentKey,StockKeyLabel,StockDatabaseID,StockKey,AssessmentYear,FishingPressureDescription) %>%
-      dplyr::summarise(Flim=mean(as.numeric(Flim),na.rm=TRUE),Fpa=mean(as.numeric(Fpa),na.rm=TRUE),Bpa=mean(as.numeric(Bpa),na.rm=TRUE),Blim=mean(as.numeric(Blim),na.rm=TRUE),FMSY=mean(as.numeric(FMSY),na.rm=TRUE),MSYBtrigger=mean(as.numeric(MSYBtrigger),na.rm=TRUE),FishingPressure=mean(as.numeric(FishingPressure),na.rm=TRUE),Fmanagement=as.numeric(Fmanagement),.groups = "drop")
+      dplyr::summarise(Flim=mean(as.numeric(Flim),na.rm=TRUE),Fpa=mean(as.numeric(Fpa),na.rm=TRUE),Bpa=mean(as.numeric(Bpa),na.rm=TRUE),Blim=mean(as.numeric(Blim),na.rm=TRUE),FMSY=mean(as.numeric(FMSY),na.rm=TRUE),MSYBtrigger=mean(as.numeric(MSYBtrigger),na.rm=TRUE),FishingPressure=mean(as.numeric(FishingPressure),na.rm=TRUE),Fmanagement=mean(as.numeric(Fmanagement)))
 
 
-
+extractmalisteSAG %>% inner_join(Last.year) %>% dplyr::filter(Year>=Year.keep) %>%
+  dplyr::group_by(StockKeyLabel) %>% summarise(total=n())
 
     # masliste<-lapply(getFishStockReferencePoints(assessments$AssessmentKey), function(x) x%>% select(matches("AssessmentKey|StockKeyLabel|StockDatabaseID|StockKey|AssessmentYear|FLim|Fpa|Bpa|Blim|FMSY|MSYBtrigger")))
     #

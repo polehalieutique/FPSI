@@ -23,8 +23,9 @@ library(rredlist)
 #test
 
 
+library(FPSI)
 
-
+sensitive.dta
 ```
 
 # ICES, NOAA database with specific R packages
@@ -89,12 +90,18 @@ ggarrange(g1,g2)
 We use icesSD and icesSAG to get similar values from ICES (limits.ices and fishdata.ices provide our common formated data)
 
 ```{r ICES_formated_data}
-
 #fishdata.ices.dta<-fishdata.ices(update=TRUE)
 #limits.ices.dta<-limits.ices(update=TRUE)
 fishdata.ices.dta<-fishdata.ices()
-limits.ices.dta<-limits.ices(update=TRUE)
+limits.ices.dta<-limits.ices(update=TRUE,from=2022)
 
+
+
+
+```
+
+
+```{r ICES_formated_data}
 #usethis::use_data(limits.ices.dta)
 #usethis::use_data(fishdata.ices.dta)
 
@@ -255,6 +262,11 @@ The system.1.iucn function is dedicate tto the this second method. To be decide 
 We store the token is a file (outside the github repository)
 
 ```{r}
+
+detach("package:FPSI", unload=TRUE)
+library(FPSI)
+
+
 stockdef<-stockdef.other()
 
 limits<-rbind(limits.ices(),limits.noaa(),limits.other())
@@ -265,9 +277,12 @@ data(iucn.dta)
 data(sensitive.dta)
 data(area.dta)
 data(iucn_to_stock_area)
+sf_use_s2()
 
 token<-readLines('/home/jerome/CSTEP_2023/FPSI/iucn.token')
+
 system.1.iucnws(sci_name='LOPHIUS PISCATORIUS',area='57.',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,token=token)
+
 
 limits %>% filter(is.na(fmsy) & is.na(msybtrigger)  & evaluationyear==2022) %>% dplyr::distinct (FishingPressureDescription) 
 
@@ -277,14 +292,49 @@ limits %>% filter(is.na(fmsy) & is.na(msybtrigger) & FishingPressureDescription=
 sensitive.dta
 
 
-system.1(sci_name='ACANTHOLABRUS PALLONI',area='27',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
+system.1(sci_name='TORPEDO TORPEDO',area='',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
 
+iucn.dta %>% filter(scientificName=='CARCHARHINUS AMBLYRHYNCHOIDES')
+
+sensitive.dta %>% filter(scientific_name=='BUGLOSSIDIUM LUTEUM')
+sensitive.dta %>% filter(scientific_name==sci_name)
+```
+
+
+```{r}
 stockdef %>% filter(fishstock=='aru.27.123a4')
 
-tmp<-system.2(sci_name='ARGENTINA SILUS',area='27',stockdef,limits,fishdata)
 
-system.1.iucnws(sci_name='ALOPIAS VULPINUS',area='37',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,token=token)
-system.1(sci_name='ALOPIAS VULPINUS',area='27',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
+tmp<-system.2(sci_name='ARGENTINA SPP',area='27.8',stockdef,limits,fishdata)
+stockdef %>% filter(scientific_name=='ARGENTINA SPP')
+
+```
+
+
+```{r}
+stockdef %>% filter(fishstock=='Acadian redfish - Gulf of Maine / Georges Bank')
+
+system.1.iucnws(sci_name='MICROMESISTIUS POUTASSOU',area='SA',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,token=token)
+
+system.1(sci_name='ZANOBATUS SCHOENLEINII',area='',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
+
+score.transcript(
+  system.1.2(sci_name='SARDINA PILCHARDUS',area='27',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=NULL)
+)
+
+score.transcript(system.1.2(sci_name='AMMODYTES SPP',area='27',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area))
+
+system.1.2.dta<-system.1.2(sci_name='AMMODYTES SPP',area='27',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
+
+score.transcript(system.1.2.dta)
+
+system.1.2(sci_name='',area='27.3',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
+
+stockdef %>% filter(fishstock=='mon.27.8c9a')
+
+limits %>% filter(fishstock=='mon.27.8c9a')
+
+limits
 
 #With ass is local
 ```
@@ -305,29 +355,52 @@ score.transcript(system.1.2(sci_name='BROSME BROSME',area='27.14.A',stockdef,lim
 
 score.transcript(system.1.2(sci_name='BROSME BROSME',area='27.1',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token))
 
-system.2(sci_name='BROSME BROSME',area='27.14.A',stockdef,limits,fishdata)
+system.2(sci_name='MERLUCCIUS HUBBSI',area='41.3.2',stockdef,limits,fishdata)
 
 tmp<-system.1.2(sci_name='SQUATINA SQUATINA',area='27.5.A',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
-score.transcript(system.1.2(sci_name='SOLEA SOLEA',area='34',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token))
 
-tmp<-system.1.2(sci_name='ABLENNES HIANS',area='27',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
-tmp<-system.1.2(sci_name='DASYATIS TORTONESEI',area='27',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
+score.transcript(system.1.2(sci_name='AAPTOSYAX GRYPUS',area='34',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=NULL))
 
-stoc
-tmp<-system.1.2(sci_name='ARGENTINA SILUS',area='37',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
+tmp<-system.1.2(sci_name='ABLENNES HIANS',area='41.3.2',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
+tmp<-
+  system.1.2(sci_name='MERLUCCIUS HUBBSI',area='41.3.2',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
+
+system.2(sci_name='THUNNUS ALALUNGA',area='27',stockdef,limits,fishdata)
+
+tmp<-system.1.iucnws(sci_name='MERLUCCIUS HUBBSI',area='41.3.2',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,token=token)
+
+
+system.1.2(sci_name='GADUS MACROCEPHALUS',area='37',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=NULL)
 
 #iucn.dta %>% filter(category=='DD') %>% inner_join(sensitive.dta)
 score.transcript(tmp)
-system.1.2(sci_name='Dicentrarchus labrax',area='27.8.C',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
 
-score.transcript(system.1.2(sci_name='Dicentrarchus labrax',area='27.8.C',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token))
+score.transcript(system.1.2(sci_name='Dicentrarchus labrax',area='27.8.C',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=NULL))
 
-score.transcript(system.1.2(sci_name=' SPRATTUS SPRATTUS',area='27.7.A',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token))
+score.transcript(system.1.2(sci_name='SPRATTUS SPRATTUS',area='27.7.A',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=NULL))
+
+score.transcript(system.1.2(sci_name='SOLEA SOLEA',area='27.7.A',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=NULL))
+
+score.transcript(system.1.2(sci_name='AMMODYTES SPP',area='27',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=NULL))
+
+
+score.transcript(system.1.2(sci_name='ARGENTINA SPP',area='27',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=NULL))
+
+system.1(sci_name='ILLEX COINDETTI',area='27',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
+
+
+```
+
+
+```{r}
 test<-system.1.2(sci_name=' SPRATTUS SPRATTUS',area='27.7.A',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token)
 
 
-system.2(sci_name='Theragra chalcogramma',area='EASTERN BERING SEA',stockdef,limits,fishdata)
+iucn.token=token
+system.2(sci_name='Dicentrarchus labrax',area='27.8',stockdef,limits,fishdata)
 
+
+score.transcript(system.1.2.dta<-system.1.2(sci_name='Dicentrarchus labrax',area='27',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,iucn.token=token))
 
 
 ```
@@ -427,6 +500,7 @@ fishdata<-rbind(fishdata.noaa(),fishdata.other(),fishdata.ices())
 
 data(iucn.dta)
 data(sensitive.dta)
+
 data(area.dta)
 data(iucn_to_stock_area)
 
@@ -453,6 +527,12 @@ if (data$method[1]=='No score for this Stock without data') {print(data$method)}
 limits %>% filter(fishstock=='ank.27.78abd')
 fishdata %>% filter(fishstock=='ank.27.78abd')
 ```
+
+
+```{r}
+sensitive.dta %>% filter(scientific_name=='GADUS MORHUA' )
+```
+
 
 After Stock cithout system2 -> link with IUCN 56 other stock could rely to a iucn category and finaly, with sensitive, 163 stocks could rely to sensitive species
 ```{r}
@@ -484,7 +564,33 @@ stock
 
 ```
 
+Des données negatives de F suur certaines espèces, voir ce que cela donne. 
+Barndoor skate - Georges Bank / Southern New England
+Chiniik salmon
 
+```{r}
+
+limits %>% filter(fishstock=='Barndoor skate - Georges Bank / Southern New England')
+
+system.2(sci_name='RAJA LAEVIS',area='GEORGES BANK',stockdef,limits,fishdata)
+system.1(sci_name='RAJA LAEVIS',area='GEORGES BANK',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
+
+system.1.2.dta<-system.1.2(sci_name='RAJA LAEVIS',area='GEORGES BANK',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
+
+#Pas de system2 et pas de system1 non plus
+stockdef %>% filter(fishstock=='Chinook salmon - Eastern North Pacific Far North Migrating')
+
+
+system.2(sci_name='ONCORHYNCHUS TSHAWYTSCHA',area='EASTERN NORTH PACIFIC FAR NORTH MIGRATING',stockdef,limits,fishdata)
+system.1(sci_name='ONCORHYNCHUS TSHAWYTSCHA',area='EASTERN NORTH PACIFIC FAR NORTH MIGRATING',iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
+
+system.1.2.dta<-system.1.2(sci_name='ONCORHYNCHUS TSHAWYTSCHA',area='EASTERN NORTH PACIFIC FAR NORTH MIGRATING',stockdef,limits,fishdata,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area)
+
+score.transcript(system.1.2.dta )
+
+
+
+```
 
 The end here ?
 

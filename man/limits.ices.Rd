@@ -9,7 +9,9 @@ limits.ices(
   Assessment_Year = NULL,
   update = FALSE,
   from = 2018,
-  to = NULL
+  to = NULL,
+  average.nbyear = NULL,
+  exclude = NULL
 )
 }
 \arguments{

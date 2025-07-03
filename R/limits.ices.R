@@ -4,8 +4,6 @@
 #' @examples
 #' limits<-limits.ices(Stock_Name='Albacore - North Atlantic',Assessment_Year=2020)
 #' @export
-#'from=2023
-#'to=2024; average.nbyear=NULL
 
 limits.ices <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE,from=2018,to=NULL,average.nbyear=NULL,exclude=NULL) {
 
@@ -31,17 +29,17 @@ limits.ices <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE,from=2
     #C'est la partie du stock la plus en mauvais état et qui conduit à l'avis le plus précautioneux
     #A changer quand on aura les évals de stock 2024
     #J(enleve aussi un stock ane.27.9 il y en a 2 et 2024)
-    maliste_SAG %>% filter(StockKeyLabel=='ane.27.9a')
+    #maliste_SAG %>% filter(StockKeyLabel=='ane.27.9a')
     maliste_SAG<-maliste_SAG %>% filter(!AssessmentKey %in% exclude)
 
-#    maliste_SAG<-getSAG(stock="alf.27.nea", year=2024, data = "source", combine = TRUE, purpose = "Advice")
+#    maliste_SAG<-getSAG(stock="cod.27.1-2.coastN", year=2024, data = "source", combine = TRUE, purpose = "Advice")
 
-        extractmalisteSAG<-maliste_SAG %>% select(matches("AssessmentKey|StockKeyLabel|StockDatabaseID|StockKey|AssessmentYear|Year|FLim|Fpa|Bpa|Blim|FMSY|MSYBtrigger|FishingPressure|FishingPressureDescription"))
+        extractmalisteSAG<-maliste_SAG %>% select(matches("AssessmentKey|StockKeyLabel|StockDatabaseID|StockKey|AssessmentYear|Year|FLim|Fpa|Bpa|Blim|FMSY|MSYBtrigger|FishingPressure|FishingPressureDescription|Fmanagement"))
     extractmalisteSAG %>% dplyr::group_by(StockKeyLabel,AssessmentYear) %>% dplyr::summarize(Year.keep=max(as.integer(Year))-average.nbyear)->Last.year
 
 masliste<-    extractmalisteSAG %>% inner_join(Last.year) %>% dplyr::filter(Year>=Year.keep) %>%
   dplyr::group_by(AssessmentKey,StockKeyLabel,StockDatabaseID,StockKey,AssessmentYear,FishingPressureDescription) %>%
-      dplyr::summarise(Flim=mean(as.numeric(Flim),na.rm=TRUE),Fpa=mean(as.numeric(Fpa),na.rm=TRUE),Bpa=mean(as.numeric(Bpa),na.rm=TRUE),Blim=mean(as.numeric(Blim),na.rm=TRUE),FMSY=mean(as.numeric(FMSY),na.rm=TRUE),MSYBtrigger=mean(as.numeric(MSYBtrigger),na.rm=TRUE),FishingPressure=mean(as.numeric(FishingPressure),na.rm=TRUE),.groups = "drop")
+      dplyr::summarise(Flim=mean(as.numeric(Flim),na.rm=TRUE),Fpa=mean(as.numeric(Fpa),na.rm=TRUE),Bpa=mean(as.numeric(Bpa),na.rm=TRUE),Blim=mean(as.numeric(Blim),na.rm=TRUE),FMSY=mean(as.numeric(FMSY),na.rm=TRUE),MSYBtrigger=mean(as.numeric(MSYBtrigger),na.rm=TRUE),FishingPressure=mean(as.numeric(FishingPressure),na.rm=TRUE),Fmanagement=as.numeric(Fmanagement),.groups = "drop")
 
 
 
@@ -55,8 +53,8 @@ masliste<-    extractmalisteSAG %>% inner_join(Last.year) %>% dplyr::filter(Year
 #     limits.tmp %>% dplyr::mutate(evaluationyear=AssessmentYear,workinggroup='ICES',fishstock=StockKeyLabel,flim=FLim,fpa=Fpa,blim=Blim,bpa=Bpa,fmsy=FMSY,msybtrigger=MSYBtrigger) %>%
 #       dplyr::select(evaluationyear,workinggroup,fishstock,flim,fpa,blim,bpa,fmsy,msybtrigger,FishingPressure,FishingPressureDescription)->limits.ices.dta
 
-    masliste %>% dplyr::mutate(evaluationyear=as.numeric(AssessmentYear),workinggroup='ICES',fishstock=StockKeyLabel,flim=Flim,fpa=Fpa,blim=Blim,bpa=Bpa,fmsy=FMSY,msybtrigger=MSYBtrigger) %>%
-      dplyr::select(evaluationyear,workinggroup,fishstock,flim,fpa,blim,bpa,fmsy,msybtrigger,FishingPressure,FishingPressureDescription)->limits.ices.dta
+    masliste %>% dplyr::mutate(evaluationyear=as.numeric(AssessmentYear),workinggroup='ICES',fishstock=StockKeyLabel,flim=Flim,fpa=Fpa,blim=Blim,bpa=Bpa,fmsy=FMSY,msybtrigger=MSYBtrigger,Fmanagement) %>%
+      dplyr::select(evaluationyear,workinggroup,fishstock,flim,fpa,blim,bpa,fmsy,msybtrigger,FishingPressure,FishingPressureDescription,Fmanagement)->limits.ices.dta
 
     return(limits.ices.dta)
   }

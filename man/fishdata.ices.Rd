@@ -9,7 +9,8 @@ fishdata.ices(
   Assessment_Year = NULL,
   update = FALSE,
   from = 2017,
-  to = NULL
+  to = NULL,
+  exclude = NULL
 )
 }
 \arguments{

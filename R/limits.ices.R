@@ -13,7 +13,7 @@ limits.ices <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE,from=2
     if (is.null(exclude)) {exclude=c(-1)}
     if (is.null(to)) {to=as.numeric(format(Sys.time(), "%Y"))}
 
-    assessments <- StockList(seq(from,to))
+    assessments <- getListStocks(seq(from,to))
     #Deprectated function ass.old<-getListStocks(seq(from,to))
 
     assessments %>%  dplyr::filter(Purpose=="Advice")->assessments

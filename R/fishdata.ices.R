@@ -16,7 +16,7 @@ fishdata.ices <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE,from
     #exclude=NULL
     #assessments <- StockList(seq(2024,2024))
 
-    assessments <- StockList(seq(from,to))
+    assessments <- getListStocks(seq(from,to))
     #Deprectated function getListStocks(seq(from,to))
 
     #Attention spécificité sur les 3 sous stock  cod.27.46a7d20 3 évaluations pour le même stock

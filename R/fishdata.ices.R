@@ -24,7 +24,7 @@ fishdata.ices <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE,from
     #C'est la partie du stock la plus en mauvais état et qui conduit à l'avis le plus précautioneux
     #A changer quand on aura les évals de stock 2024
     assessments %>%  dplyr::filter(Purpose=="Advice") %>%  filter(!AssessmentKey %in% exclude)->assessments
-#    assessments<-data.frame(AssessmentKey=18195)
+##    assessments<-data.frame(AssessmentKey=18195)
     fishdata.tmp  <- do.call("rbind",list(getSummaryTable(assessments$AssessmentKey)))
       fishdata.tmp %>% dplyr::mutate(evaluationyear=AssessmentYear,workinggroup='ICES',year=Year,ssb=as.numeric(SSB),meanf=as.numeric(F),low_f=as.numeric(low_F),high_f=as.numeric(high_F),tbiomass=NA,yieldssb=NA,sop=NA) %>%
         dplyr::select(evaluationyear,workinggroup,fishstock,year,recruitment,tbiomass,ssb,landings,yieldssb,meanf,sop,discards,low_f,high_f,fishingPressureDescription,fishingPressureUnits)->fishdata.ices.dta

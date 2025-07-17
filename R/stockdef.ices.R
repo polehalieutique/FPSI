@@ -6,12 +6,13 @@
 #'
 #' @export
 #'
-stockdef.ices <- function(update=FALSE) {
+stockdef.ices <- function(update=FALSE,from=NULL,to=NULL) {
 
   data(asfis)
 
   if (update)
   {
+    if (is.null(from)) {from=as.numeric(format(Sys.time(), "%Y"))}
     if (is.null(to)) {to=as.numeric(format(Sys.time(), "%Y"))}
     assessments <- StockList(seq(from,to))
 

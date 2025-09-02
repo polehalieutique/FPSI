@@ -34,6 +34,7 @@ limits.ices <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE,from=2
                    #"HRmsy proxy", "HRMSY proxy", "HR_{MSY}", "HRMSY proxy", "F_(MSY proxy)", "HR MSY proxy", "HRmsy",
 
     )
+
     maliste_SAG <- maliste_SAG %>%
       mutate(FMSY = case_when(
         (FMSY == "" | is.na(FMSY)) & CustomRefPointName1 %in% fmsyproxy ~ CustomRefPointValue1,

@@ -2,7 +2,7 @@
 #' @param Stock_Name to get data for a specified stock
 #' @param Assessment_Year to get data for a specified stock
 #' @examples
-#' limits<-limits.ices(Stock_Name='Albacore - North Atlantic',Assessment_Year=2020) from=2024
+#' limits<-limits.ices(Stock_Name='fle.27.3a4',Assessment_Year=2025) from=2024
 #' @export
 
 limits.ices <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE,from=2018,to=NULL,average.nbyear=NULL,exclude=NULL) {
@@ -22,7 +22,27 @@ limits.ices <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE,from=2
 #Normalement le reste est identique - A checker sur 2022 / Je fais donc la moyenne sur 6 an des Fishing pressure et je considère cela comme une nouvelle limite
 
     maliste_SAG<-getSAG(stock=NULL, year=seq(from,to), data = "source", combine = TRUE, purpose = "Advice")
-#On est obligé de créer un diverticule pour ce stock qui est évalué en 3 sous stocks / C'est sur la même zone
+    #maliste_SAG %>% filter(StockKeyLabel=='fle.27.3a4')
+
+    ### when FMSY is na and Fmsy proxy in custom then set FMSY to Fmsy proxy
+    fmsyproxy <- c("HR_{MSY proxy}", "F_{MSYproxy}", "FMSY proxy", "F_{MSY proxy}",
+                   "Relative FMSY", "HR_{MSY proxy}", "Fmsy proxy", "F_(msy proxy)",
+                   "F_(MSY proxy)", "F_{MSY proxy}", "FMSY proxy",
+                   "F_{MSY proxy}", "Fmsy proxy", "F_{MSYproxy}",
+                   "F_{MGT}", "Rel FMSY", "F_{MP}", "F/F_{MSY}" , "HR_{MGT}",
+                   "F MSY proxy" ,"F MSY proxy", "LBI"
+                   #"HRmsy proxy", "HRMSY proxy", "HR_{MSY}", "HRMSY proxy", "F_(MSY proxy)", "HR MSY proxy", "HRmsy",
+
+    )
+    maliste_SAG <- maliste_SAG %>%
+      mutate(FMSY = case_when(
+        (FMSY == "" | is.na(FMSY)) & CustomRefPointName1 %in% fmsyproxy ~ CustomRefPointValue1,
+        (FMSY == "" | is.na(FMSY)) & CustomRefPointName2 %in% fmsyproxy ~ CustomRefPointValue2,
+        (FMSY == "" | is.na(FMSY)) & CustomRefPointName3 %in% fmsyproxy ~ CustomRefPointValue3,
+        (FMSY == "" | is.na(FMSY)) & CustomRefPointName3 %in% fmsyproxy ~ CustomRefPointValue4,
+        (FMSY == "" | is.na(FMSY)) & CustomRefPointName3 %in% fmsyproxy ~ CustomRefPointValue5,
+        TRUE ~ FMSY)) %>% filter(StockKeyLabel=='fle.27.3a4')
+    #On est obligé de créer un diverticule pour ce stock qui est évalué en 3 sous stocks / C'est sur la même zone
 
       #Attention spécificité sur les 3 sous stock  cod.27.46a7d20 3 évaluations pour le même stock
     #Après discussion avec Youen je ne garde que le stock sud qui correspond à ce qui a été gardé pour l'avis scientifique

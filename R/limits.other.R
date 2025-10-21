@@ -15,7 +15,7 @@ limits.other <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE,user=
     library(RPostgreSQL)
     drv <- dbDriver("PostgreSQL")
     stock <- dbConnect(drv, host=server, user=user, password=password, dbname=db)
-    limits<-dbGetQuery(stock,paste("select evaluationyear,workinggroup,fishstock,flim,fpa,blim,bpa,fmsy,msybtrigger,references from limits where workinggroup not like 'ICES%' and workinggroup not in ",noaa.include,sep=''))
+    limits<-dbGetQuery(stock,paste("select evaluationyear,workinggroup,fishstock,flim,fpa,blim,bpa,fmsy,msybtrigger,src_references from limits where workinggroup not like 'ICES%' and workinggroup not in ",noaa.include,sep=''))
     dbDisconnect(stock)
     limits<-limits %>% mutate(FishingPressure=NULL,FishingPressureDescription=NULL)
     return(limits)

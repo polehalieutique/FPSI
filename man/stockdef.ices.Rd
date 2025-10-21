@@ -4,7 +4,7 @@
 \alias{stockdef.ices}
 \title{Get limits values for  stocks provided by NOAA stocksmart packages}
 \usage{
-stockdef.ices(update = FALSE)
+stockdef.ices(update = FALSE, from = NULL, to = NULL)
 }
 \arguments{
 \item{Stock_Name}{to get data for a specified stock}

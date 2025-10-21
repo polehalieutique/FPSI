@@ -23,5 +23,5 @@ limits.other(
 Get limits values for  stocks provided by ICES stocksmart packages
 }
 \examples{
-limits<-limits.ices(Stock_Name='Albacore - North Atlantic',Assessment_Year=2020)
+limits<-limits.ices(Stock_Name='Albacore - North Atlantic',Assessment_Year=2020,update=TRUE)
 }

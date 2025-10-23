@@ -5,10 +5,10 @@
 #' pre.score.2<-system.2(sci_name='MOLVA MOLVA',area='27.1')
 #' @export
 #'
-system.2 <- function(sci_name=NULL,area=NULL,stockdef=NULL,limits=NULL,fishdata=NULL) {
+system.2 <- function(sci_name=NULL,area=NULL,stockdef=NULL,limits=NULL,fishdata=NULL,nbyear_average=6) {
 
-an_6<-2017 # We take into account time series from 2023 to 2017 (6 year)
-
+an_6<-as.numeric(format(Sys.Date(),'%Y'))-6 # We take into account time series from 2023 to 2017 (6 year)
+  Sys.Date()
 if (is.null(stockdef) && is.null(limits) && is.null(fishdata))
 {
   stockdef<-stockdef.other()
@@ -24,7 +24,7 @@ if (is.null(stockdef) && is.null(limits) && is.null(fishdata))
     dplyr::summarize(evaluationyear=max(evaluationyear)) ->last.Eval.year
 #To obtain for the last EvaluationYear the last 6 years of the time serie
 fishdata %>%  dplyr::inner_join(last.Eval.year) %>% dplyr::group_by(fishstock,evaluationyear) %>%
-  dplyr::summarize(maxyear=max(year)-6)->last.ts.year
+  dplyr::summarize(maxyear=max(year)-nbyear_average)->last.ts.year
 
 #last.Eval.year<-last.Eval.year %>% filter(fishstock=='Pacific cod - Bering Sea')
 #test<-limits %>% filter(fishstock=='Pacific cod - Bering Sea') %>% distinct(evaluationyear)

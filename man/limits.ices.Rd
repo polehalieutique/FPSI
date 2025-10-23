@@ -23,5 +23,5 @@ limits.ices(
 Get limits values for  stocks provided by ICES stocksmart packages
 }
 \examples{
-limits<-limits.ices(Stock_Name='fle.27.3a4',from=2025) from=2024
+limits<-limits.ices(update=TRUE,Stock_Name='fle.27.3a4',from=2025) from=2024
 }

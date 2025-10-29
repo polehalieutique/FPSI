@@ -9,7 +9,8 @@ system.2(
   area = NULL,
   stockdef = NULL,
   limits = NULL,
-  fishdata = NULL
+  fishdata = NULL,
+  nbyear_average = 6
 )
 }
 \arguments{

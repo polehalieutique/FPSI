@@ -14,7 +14,8 @@ system.1.2(
   sensitive.dta = NULL,
   area.dta = NULL,
   iucn_to_stock_area = NULL,
-  iucn.token = NULL
+  iucn.token = NULL,
+  nbyear_average = 6
 )
 }
 \arguments{

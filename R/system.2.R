@@ -7,6 +7,9 @@
 #'
 system.2 <- function(sci_name=NULL,area=NULL,stockdef=NULL,limits=NULL,fishdata=NULL,nbyear_average=6) {
 
+#We add the nbyear_average parameter to precise on how many values F should be taken into account and average
+#nbyear_average=2 will take Fc (SSB is provide to 2025 and F to 2024)
+
 an_6<-as.numeric(format(Sys.Date(),'%Y'))-6 # We take into account time series from 2023 to 2017 (6 year)
   Sys.Date()
 if (is.null(stockdef) && is.null(limits) && is.null(fishdata))

@@ -31,18 +31,18 @@ sf::sf_use_s2(FALSE)
   area.req.sens<-'27'}
 
   iucn.dta %>%
-    mutate(scientific_name=scientificName) %>%
-    filter(scientific_name==sci_name,scopes==area.req.sens.iucn) %>%
-    filter(!is.na(category)) %>%
-  mutate(area.req=area)-> system1.road.6
+    dplyr::mutate(scientific_name=scientificName) %>%
+    dplyr::filter(scientific_name==sci_name,scopes==area.req.sens.iucn) %>%
+    dplyr::filter(!is.na(category)) %>%
+    dplyr::mutate(area.req=area)-> system1.road.6
 
 nlignes<-dim(system1.road.6)[1]
 
 if (nlignes==0) {iucn.dta %>%
-    mutate(scientific_name=scientificName) %>%
-    filter(scientific_name==sci_name,scopes=='Global') %>%
-    filter(!is.na(category)) %>%
-    mutate(area.req=area)-> system1.road.6
+    dplyr::mutate(scientific_name=scientificName) %>%
+    dplyr::filter(scientific_name==sci_name,scopes=='Global') %>%
+    dplyr::filter(!is.na(category)) %>%
+    dplyr::mutate(area.req=area)-> system1.road.6
 }
 
 nlignes<-dim(system1.road.6)[1]
@@ -65,13 +65,13 @@ nlignes<-dim(system1.road.6)[1]
 
   }else
   {sensitive.dta
-    result.local<-system1.road.6 %>% mutate(area.req=area.req.sens) %>% left_join(sensitive.dta)
-    result.global<-system1.road.6 %>% mutate(area.req='Global') %>%
+    result.local<-system1.road.6 %>% dplyr::mutate(area.req=area.req.sens) %>% left_join(sensitive.dta)
+    result.global<-system1.road.6 %>% dplyr::mutate(area.req='Global') %>%
       left_join(sensitive.dta)
     if (is.na(result.local$Sensitivity_indicator)) {results<-result.global} else {results<-result.local}
   }
 
-results %>% mutate(fishstock=paste(scientific_name,area,sep='+'))->results
+results %>% dplyr::mutate(fishstock=paste(scientific_name,area,sep='+'))->results
 
   return(results)
 

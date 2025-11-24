@@ -22,13 +22,13 @@ else
     print('System2 detected')
 
 
-    system.1.2.dta %>% filter(method=='system2') %>% mutate(road=case_when(road.1~'road.1',
+    system.1.2.dta %>% dplyr::filter(method=='system2') %>% dplyr::mutate(road=case_when(road.1~'road.1',
                                              road.2~'road.2',
                                              road.3~'road.3',
                                              road.4~'road.4',
                                              road.5~'road.5'
                                             )
-                                             ,score=case_when(road.1 & mean.b_bmsy <0.5~'E',
+                                             ,score=dplyr::case_when(road.1 & mean.b_bmsy <0.5~'E',
                                                             road.1 & (mean.b_bmsy>=0.5 & mean.b_bmsy <0.8)~'D',
                                                             road.2 & (mean.f_fmsy>=0 & mean.f_fmsy <1)~'A',
                                                             road.2 & (mean.f_fmsy>=1 & mean.f_fmsy <1.2)~'B',
@@ -49,7 +49,7 @@ else
 
 
     )) %>%
-      select (fishstock,species_code,scientific_name,method,road,score,sub_division_fao,FishingPressureDescription,mean.f_fmsy,mean.b_bmsy,mean.catch.advice, road.1,road.2,road.3,road.4,road.5,nb.eval,eval.year,f_fmsy,b_bmsy,roadall)        ->system.1.2.dta.system2
+      dplyr::select (fishstock,species_code,scientific_name,method,road,score,sub_division_fao,FishingPressureDescription,mean.f_fmsy,mean.b_bmsy,mean.catch.advice, road.1,road.2,road.3,road.4,road.5,nb.eval,eval.year,f_fmsy,b_bmsy,roadall)        ->system.1.2.dta.system2
 
     if (!mix.systems) result<-system.1.2.dta.system2
 
@@ -65,7 +65,7 @@ else
   {
       print('System1 detected')
 
-      system.1.2.dta %>% filter(method=='system1') %>%  mutate(road=case_when(category %in% c('NT','VU','CR','EN') ~'road.6',
+      system.1.2.dta %>% dplyr::filter(method=='system1') %>%  dplyr::mutate(road=case_when(category %in% c('NT','VU','CR','EN') ~'road.6',
                                                category %in% c('LC')~'road.7',
                                                is.na(category) || category %in% c('DD') ~'road.8'
 
@@ -88,7 +88,7 @@ else
                        (is.na(category) | category %in% c('DD')) & source_code=='O' & (Sensitivity_indicator >1.6 &  Sensitivity_indicator<=2)  ~'D',
                        (is.na(category) | category %in% c('DD')) & source_code=='O' & (Sensitivity_indicator >2 ) ~'E'
                      )) %>%
-        select(scientific_name,fishstock,method,road,score,category,source_code,Sensitivity_indicator)->system.1.2.dta.system1
+        dplyr::select(scientific_name,fishstock,method,road,score,category,source_code,Sensitivity_indicator)->system.1.2.dta.system1
 
 
 

@@ -16,9 +16,9 @@ if (update) {
   names(stockAssessmentSummary)<-gsub(' |/','_',names(stockAssessmentSummary))
 
   #names(stockAssessmentSummary)
-  stockAssessmentSummary %>% select(Stock_Name,Assessment_Year,B_Year,Estimated_B,F_Fmsy,Estimated_F,Jurisdiction) %>%
-    mutate(AssessmentYear=Assessment_Year,StockName=Stock_Name,Year=B_Year,tbiomass=Estimated_B) %>%
-    select(AssessmentYear,StockName,Year,tbiomass,F_Fmsy,Estimated_F,Jurisdiction)->extract_biomass
+  stockAssessmentSummary %>% dplyr::select(Stock_Name,Assessment_Year,B_Year,Estimated_B,F_Fmsy,Estimated_F,Jurisdiction) %>%
+    dplyr::mutate(AssessmentYear=Assessment_Year,StockName=Stock_Name,Year=B_Year,tbiomass=Estimated_B) %>%
+    dplyr::select(AssessmentYear,StockName,Year,tbiomass,F_Fmsy,Estimated_F,Jurisdiction)->extract_biomass
 
 
 

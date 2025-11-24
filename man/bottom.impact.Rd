@@ -15,5 +15,5 @@ bottom.impact(gear.req = NULL, species.req = NULL)
 Get limits values for  stocks provided by ICES stocksmart packages
 }
 \examples{
-impact<-bottom.impact(gear.req='OTM',species.req='SCE')
+impact<-bottom.impact(gear.req='PS',species.req='ANE')
 }

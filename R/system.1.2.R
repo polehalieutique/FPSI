@@ -6,11 +6,11 @@
 #' @export
 #'
 
-system.1.2 <- function(sci_name=NULL,area=NULL,stockdef=NULL,limits=NULL,fishdata=NULL,iucn.dta=NULL,sensitive.dta=NULL,area.dta=NULL,iucn_to_stock_area=NULL,iucn.token=NULL,nbyear_average=6) {
+system.1.2 <- function(sci_name=NULL,area=NULL,stockdef=NULL,limits=NULL,fishdata=NULL,iucn.dta=NULL,sensitive.dta=NULL,area.dta=NULL,iucn_to_stock_area=NULL,iucn.token=NULL,nbyear_average=6,fmsy_upper=FALSE) {
 
 print(paste('First Step for ',sci_name,' in ',area,'for system2 ',sep=''))
 
-system.2.road1.2.3.4.5<-system.2(sci_name,area,stockdef,limits,fishdata,nbyear_average)
+system.2.road1.2.3.4.5<-system.2(sci_name,area,stockdef,limits,fishdata,nbyear_average,fmsy_upper=fmsy_upper)
 
 mix.systems<-length(unique(system.2.road1.2.3.4.5$roadall))==2
 if (dim(system.2.road1.2.3.4.5)[1]==0 | sum(as.numeric(system.2.road1.2.3.4.5$roadall))==0 |mix.systems)

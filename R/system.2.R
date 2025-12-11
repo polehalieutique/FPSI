@@ -5,7 +5,7 @@
 #' pre.score.2<-system.2(sci_name='MOLVA MOLVA',area='27.1')
 #' @export
 #'
-system.2 <- function(sci_name=NULL,area=NULL,stockdef=NULL,limits=NULL,fishdata=NULL,nbyear_average=6) {
+system.2 <- function(sci_name=NULL,area=NULL,stockdef=NULL,limits=NULL,fishdata=NULL,nbyear_average=6,fmsy_upper=FALSE) {
 
 #We add the nbyear_average parameter to precise on how many values F should be taken into account and average
 #nbyear_average=2 will take Fc (SSB is provide to 2025 and F to 2024)
@@ -20,6 +20,11 @@ if (is.null(stockdef) && is.null(limits) && is.null(fishdata))
 
   fishdata<-rbind(fishdata.noaa(),fishdata.other(),fishdata.ices())
 }
+
+  if (fmsy_upper) {
+    data(fmsy_range.dta)
+    limits %>% dplyr::left_join(fmsy_range.dta) %>% mutate(fmsy=case_when(fmsy_upper>0~fmsy_upper,TRUE~fmsy)) ->limits
+  }
 
   sf::sf_use_s2(FALSE)
 #To obtain last available Evaluationyear by stock

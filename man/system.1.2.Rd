@@ -15,7 +15,8 @@ system.1.2(
   area.dta = NULL,
   iucn_to_stock_area = NULL,
   iucn.token = NULL,
-  nbyear_average = 6
+  nbyear_average = 6,
+  fmsy_upper = FALSE
 )
 }
 \arguments{

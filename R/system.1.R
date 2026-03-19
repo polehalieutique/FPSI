@@ -2,7 +2,7 @@
 #' @param scientific_name taxonomic name of the product
 #' @param area catches area mentionned for the product
 #' @examples
-#' pre.score.2<-system.(sci_name='SQUATINA SQUATINA',area='27.')
+#' pre.score.2<-system.(sci_name='LOLIGO VULGARIS',area='31.1.2')
 #' @export
 #'
 system.1 <- function(sci_name=NULL,area=NULL,iucn.dta=NULL,sensitive.dta=NULL,area.dta=NULL,iucn_to_stock_area=NULL,longitude=NULL,latitude=NULL) {
@@ -65,9 +65,11 @@ nlignes<-dim(system1.road.6)[1]
 
   }else
   {sensitive.dta
-    result.local<-system1.road.6 %>% dplyr::mutate(area.req=area.req.sens) %>% left_join(sensitive.dta)
+    result.local<-system1.road.6 %>% dplyr::mutate(area.req=area.req.sens) %>% left_join(sensitive.dta) %>%
+      select(-Indicator_source) %>% distinct()
     result.global<-system1.road.6 %>% dplyr::mutate(area.req='Global') %>%
-      left_join(sensitive.dta)
+      left_join(sensitive.dta) %>%
+      select(-Indicator_source) %>% distinct()
     if (is.na(result.local$Sensitivity_indicator)) {results<-result.global} else {results<-result.local}
   }
 

@@ -88,7 +88,8 @@ else
                        (is.na(category) | category %in% c('DD')) & source_code=='O' & (Sensitivity_indicator >1.6 &  Sensitivity_indicator<=2)  ~'D',
                        (is.na(category) | category %in% c('DD')) & source_code=='O' & (Sensitivity_indicator >2 ) ~'E'
                      )) %>%
-        dplyr::select(scientific_name,fishstock,method,road,score,category,source_code,Sensitivity_indicator)->system.1.2.dta.system1
+        dplyr::select(scientific_name,fishstock,method,road,score,category,source_code,Sensitivity_indicator) %>%
+        mutate(mean.f_fmsy=NA,mean.b_bmsy=NA) ->system.1.2.dta.system1
 
 
 

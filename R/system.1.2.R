@@ -17,7 +17,7 @@ if (dim(system.2.road1.2.3.4.5)[1]==0 | sum(as.numeric(system.2.road1.2.3.4.5$ro
 {
   print(paste('No answer for system2 or mixed system 1 and 2, Second step for System 1',sep=''))
 if (is.null(iucn.token)){
-  system.1.road.5.6<-system.1(sci_name,area,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area) %>% mutate(method='system1')
+  system.1.road.5.6<-system.1(sci_name,area,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area) %>% unique() %>% mutate(method='system1')
 } else
 {
   system.1.road.5.6<-system.1.iucnws(sci_name,area,iucn.dta,sensitive.dta,area.dta,iucn_to_stock_area,token=iucn.token) %>% mutate(method='system1')

@@ -2,7 +2,7 @@
 #' @param species.req Alpha code of species
 #' @param gear.req FAO code of gear
 #' @examples
-#' impact<-bottom.impact(gear.req='PS',species.req='ANE')
+#' impact<-bottom.impact(gear.req='OTB',species.req='SQC')
 #' @export
 #
 bottom.impact <- function(gear.req=NULL,species.req=NULL) {
@@ -13,7 +13,12 @@ bottom.impact <- function(gear.req=NULL,species.req=NULL) {
 bottom.impact.species.dta.2<-bottom.impact.species.dta %>% dplyr::rename(gearimpactinit=gearimpact2) %>%
   dplyr::mutate(gearimpact2=case_when(gearimpactinit==0~1,TRUE ~ gearimpactinit)) %>% # On passe les pélagiques à 1 (indiqué dans l'article Grati)
   dplyr::select(-gearimpactinit)
-result<-data.frame(gear.impact=(bottom.impact.gear.dta %>% dplyr::filter(gear==gear.req))$gearimpact,habitat.impact=(bottom.impact.species.dta.2 %>% filter(species==species.req))$gearimpact2)
+tmp.impact1<-(bottom.impact.gear.dta %>% dplyr::filter(gear==gear.req))$gearimpact
+tmp.impact2<-(bottom.impact.species.dta.2 %>% filter(species==species.req))$gearimpact2
+if (length(tmp.impact1)==0) {tmp.impact1<-3}
+if (length(tmp.impact2)==0) {tmp.impact2<-3}
+
+result<-data.frame(gear.impact=tmp.impact1,habitat.impact=tmp.impact2)
 
     return(result) #I can store data within the package as stocksmart one
 

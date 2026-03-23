@@ -2,7 +2,7 @@
 #' @param scientific_name taxonomic name of the product
 #' @param area catches area mentionned for the product
 #' @examples
-#' pre.score.2<-system.(sci_name='LOLIGO VULGARIS',area='31.1.2')
+#' pre.score.2<-system.1(sci_name='LOLIGO VULGARIS',area='34.1.2')
 #' @export
 #'
 system.1 <- function(sci_name=NULL,area=NULL,iucn.dta=NULL,sensitive.dta=NULL,area.dta=NULL,iucn_to_stock_area=NULL,longitude=NULL,latitude=NULL) {

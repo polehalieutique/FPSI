@@ -39,7 +39,6 @@ fishdata %>%  dplyr::inner_join(last.Eval.year) %>% dplyr::group_by(fishstock,ev
 #limits %>% filter(fishstock=='Pacific cod - Bering Sea' )
 
 #Modification to take into account Fishing pressure alternatives
-
 system2.dta<- stockdef %>%
   right_join(
     fishdata %>% left_join(fishdata_ext.ices.dta) %>%  inner_join(last.ts.year) %>% dplyr::filter(year>maxyear) %>%

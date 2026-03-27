@@ -65,9 +65,11 @@ else
   {
       print('System1 detected')
 
+
+
       system.1.2.dta %>% dplyr::filter(method=='system1') %>%  dplyr::mutate(road=case_when(category %in% c('NT','VU','CR','EN') ~'road.6',
                                                category %in% c('LC')~'road.7',
-                                               is.na(category) || category %in% c('DD') ~'road.8'
+                                               is.na(category) | category %in% c('DD') ~'road.8'
 
       )#First use of more precise and local sensitive list Rindorf and if it's not available then Cheung # Add area 27 maybe
       ,score=case_when(category=='NT' ~'D',

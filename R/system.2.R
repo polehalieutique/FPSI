@@ -28,10 +28,10 @@ if (is.null(stockdef) && is.null(limits) && is.null(fishdata))
 
   sf::sf_use_s2(FALSE)
 #To obtain last available Evaluationyear by stock
-  fishdata %>%  dplyr::filter(evaluationyear>an_6) %>%  dplyr::group_by(fishstock) %>%
+  fishdata %>%  dplyr::filter(evaluationyear>an_6) %>% dplyr::group_by(fishstock) %>%
     dplyr::summarize(evaluationyear=max(evaluationyear)) ->last.Eval.year
 #To obtain for the last EvaluationYear the last 6 years of the time serie
-fishdata %>%  dplyr::inner_join(last.Eval.year) %>% dplyr::group_by(fishstock,evaluationyear) %>%
+fishdata %>%  dplyr::inner_join(last.Eval.year) %>% dplyr::filter(meanf>0) %>% dplyr::group_by(fishstock,evaluationyear) %>%
   dplyr::summarize(maxyear=max(year)-nbyear_average)->last.ts.year
 
 #last.Eval.year<-last.Eval.year %>% filter(fishstock=='Pacific cod - Bering Sea')

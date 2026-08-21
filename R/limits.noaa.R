@@ -2,11 +2,17 @@
 #' @param Stock_Name to get data for a specified stock
 #' @param Assessment_Year to get data for a specified stock
 #' @examples
+#' library(stocksmart)
+#' library(dplyr)
+#' library(sf)
+#' library(tidyr)
 #' limits<-limits.noaa(Stock_Name='Albacore - North Atlantic',update=TRUE)
 #' @export
 #'
 limits.noaa <- function(Stock_Name=NULL,Assessment_Year=NULL,update=FALSE) {
 
+  library(dplyr)
+  library(stocksmart)
   if (update) {
     get_latest_full_assessment(itis = NULL) # To replace StockassessmentData and stockAssessmentSummary
   }

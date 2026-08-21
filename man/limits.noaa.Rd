@@ -15,5 +15,9 @@ limits.noaa(Stock_Name = NULL, Assessment_Year = NULL, update = FALSE)
 Get limits values for  stocks provided by NOAA stocksmart packages
 }
 \examples{
+library(stocksmart)
+library(dplyr)
+library(sf)
+library(tidyr)
 limits<-limits.noaa(Stock_Name='Albacore - North Atlantic',update=TRUE)
 }

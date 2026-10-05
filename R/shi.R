@@ -24,6 +24,15 @@ shi <- function(fleets.aer=NULL,stockdef=NULL,limits=NULL,fishdata=NULL,limit.as
     fishdata<-rbind(fishdata.noaa(),fishdata.other(),fishdata.ices())
   }
 
+stockdef.wid1<-stockdef %>% st_drop_geometry() %>%
+  mutate(sub_division_fao=substr(sub_division_fao,2,1000000L)) %>% separate_longer_delim(sub_division_fao,"./.")
+
+stockdef.wid1 %>%
+    group_by(species_code,sub_division_fao) %>% summarise(nb.stock=n()) %>%
+    filter(nb.stock>1) %>%
+    inner_join(stockdef.wid1)->test
+
+
   #To obtain last available Evaluationyear by stock
   fishdata %>%  dplyr::filter(evaluationyear>limit.assYear) %>% dplyr::group_by(fishstock) %>%
     dplyr::summarize(evaluationyear=max(evaluationyear)) ->last.Eval.year

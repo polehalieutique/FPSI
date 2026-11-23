@@ -2,7 +2,7 @@
 #' @param scientific_name taxonomic name of the product
 #' @param area catches area mentionned for the product
 #' @examples
-#' pre.score.2<-system.2(sci_name='MOLVA MOLVA',area='27.1')
+#' pre.score.2<-system.2(sci_name='MOLVA MOLVA',area='27.1')system.2(sci_name='SARDINA PILCHARDUS',area='27.7')
 #' @export
 #'
 system.2 <- function(sci_name=NULL,area=NULL,stockdef=NULL,limits=NULL,fishdata=NULL,nbyear_average=6,fmsy_upper=FALSE) {
@@ -10,8 +10,13 @@ system.2 <- function(sci_name=NULL,area=NULL,stockdef=NULL,limits=NULL,fishdata=
 #We add the nbyear_average parameter to precise on how many values F should be taken into account and average
 #nbyear_average=2 will take Fc (SSB is provide to 2025 and F to 2024)
 
+#Pour les données d'avis scientifiques elles semble en décalage d'un an. Je décale donc l'avaluation year d'un an avis 2025 pour captures 2026
+#fishdata_ext.ices.dta<-fishdata_ext.ices.dta %>% mutate(evaluationyear=evaluationyear+1)
+#fishdata_ext.ices.dta %>% filter(fishstock=='pil.27')
+
+
 an_6<-as.numeric(format(Sys.Date(),'%Y'))-6 # We take into account time series from 2023 to 2017 (6 year)
-  Sys.Date()
+
 if (is.null(stockdef) && is.null(limits) && is.null(fishdata))
 {
   stockdef<-stockdef.other()
@@ -31,7 +36,7 @@ if (is.null(stockdef) && is.null(limits) && is.null(fishdata))
   fishdata %>%  dplyr::filter(evaluationyear>an_6) %>% dplyr::group_by(fishstock) %>%
     dplyr::summarize(evaluationyear=max(evaluationyear)) ->last.Eval.year
 #To obtain for the last EvaluationYear the last 6 years of the time serie
-fishdata %>%  dplyr::inner_join(last.Eval.year) %>% dplyr::filter(meanf>0) %>% dplyr::group_by(fishstock,evaluationyear) %>%
+fishdata %>%  dplyr::inner_join(last.Eval.year) %>% dplyr::group_by(fishstock,evaluationyear) %>%  #dplyr::filter(meanf>0) %>%
   dplyr::summarize(maxyear=max(year)-nbyear_average)->last.ts.year
 
 #last.Eval.year<-last.Eval.year %>% filter(fishstock=='Pacific cod - Bering Sea')
@@ -48,13 +53,14 @@ system2.dta<- stockdef %>%
                     msybtrigger_or_prox=case_when(!is.na(msybtrigger)~ msybtrigger,is.na(msybtrigger) & !is.na(bpa)~bpa),  b_bmsy=ssb/msybtrigger_or_prox,
                     catch.advice=catches/catches_advice,
              FishingPressureDescription=case_when(!is.na(FishingPressureDescription)~FishingPressureDescription,
-                                                                                           TRUE ~ 'F')) %>%
-            dplyr::group_by(fishstock,FishingPressureDescription) %>% dplyr::summarize(mean.f_fmsy=mean(f_fmsy,na.rm=TRUE),mean.b_bmsy=mean(b_bmsy,na.rm=TRUE),
+                                                                                           TRUE ~ 'F'))  %>%
+            dplyr::group_by(fishstock,FishingPressureDescription) %>%
+      dplyr::summarize(mean.f_fmsy=mean(f_fmsy,na.rm=TRUE),mean.b_bmsy=mean(b_bmsy,na.rm=TRUE),
                                                                                        mean.catch.advice=mean(catch.advice,na.rm=TRUE),road.1=mean.b_bmsy<0.8,
               road.2=mean.b_bmsy>=0.8 && !is.na(mean.f_fmsy),
               road.3=mean.b_bmsy>=0.8 && is.na(mean.f_fmsy),
               road.4=is.na(mean.b_bmsy) && !is.na(mean.f_fmsy) ,
-              road.5=is.na(mean.b_bmsy) && is.na(mean.f_fmsy) && !is.na(mean.catch.advice),
+              road.5=is.na(mean.b_bmsy) && is.na(mean.f_fmsy) && !is.na(mean.catch.advice),valid_name=toupper(sci_name) ,
               nb.eval=n(),eval.year=mean(evaluationyear,na.rm=TRUE),
               f_fmsy=paste(f_fmsy,collapse='/'),b_bmsy=paste(b_bmsy,collapse='/'))) %>%
     dplyr::mutate(roadall=as.numeric(coalesce(road.1,0))+as.numeric(coalesce(road.2,0))+as.numeric(coalesce(road.3,0))+as.numeric(coalesce(road.4,0))+as.numeric(coalesce(road.5,0)))

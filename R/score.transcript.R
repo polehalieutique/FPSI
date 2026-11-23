@@ -49,7 +49,7 @@ else
 
 
     )) %>%
-      dplyr::select (fishstock,species_code,scientific_name,method,road,score,sub_division_fao,FishingPressureDescription,mean.f_fmsy,mean.b_bmsy,mean.catch.advice, road.1,road.2,road.3,road.4,road.5,nb.eval,eval.year,f_fmsy,b_bmsy,roadall)        ->system.1.2.dta.system2
+      dplyr::select (fishstock,species_code,scientific_name,valid_name,method,road,score,sub_division_fao,FishingPressureDescription,mean.f_fmsy,mean.b_bmsy,mean.catch.advice, road.1,road.2,road.3,road.4,road.5,nb.eval,eval.year,f_fmsy,b_bmsy,roadall)        ->system.1.2.dta.system2
 
     if (!mix.systems) result<-system.1.2.dta.system2
 
@@ -90,7 +90,7 @@ else
                        (is.na(category) | category %in% c('DD')) & source_code=='O' & (Sensitivity_indicator >1.6 &  Sensitivity_indicator<=2)  ~'D',
                        (is.na(category) | category %in% c('DD')) & source_code=='O' & (Sensitivity_indicator >2 ) ~'E'
                      )) %>%
-        dplyr::select(scientific_name,fishstock,method,road,score,category,source_code,Sensitivity_indicator) %>%
+        dplyr::select(scientific_name,valid_name,fishstock,method,road,score,category,source_code,Sensitivity_indicator) %>%
         mutate(mean.f_fmsy=NA,mean.b_bmsy=NA) ->system.1.2.dta.system1
 
 

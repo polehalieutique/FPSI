@@ -23,5 +23,5 @@ system.2(
 Get limits values for  stocks provided by ICES stocksmart packages
 }
 \examples{
-pre.score.2<-system.2(sci_name='MOLVA MOLVA',area='27.1')
+pre.score.2<-system.2(sci_name='MOLVA MOLVA',area='27.1')system.2(sci_name='SARDINA PILCHARDUS',area='27.7')
 }
